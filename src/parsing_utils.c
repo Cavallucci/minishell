@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/10/28 15:02:49 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/10/28 15:36:16 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,96 +129,102 @@ char	*ft_make_split(char **s, char **new, int k, int j)
 {
 	while (is_charset(**s))
 	{
-		*new[j] = (char *)malloc(sizeof(char) * (count_char(*s, 'o') + 1));
-		if (!(*new[j]))
-			return (ft_free(*new));
+		new[j] = (char *)malloc(sizeof(char) * (count_char(*s, 'o') + 1));
+		if (!new[j])
+		{
+			ft_free(new);
+			return (NULL);
+		}
 		k = 0;
-		while (**s && is_charset(**s))
-			*new[j][k++] = **s++;
-		*new[j][k] = 0;
+		while (*(*s) && is_charset(**s))
+			new[j][k++] = *(*s)++;
+		new[j][k] = 0;
 	}
+	return (new[j]);
 }
 
 char	*ft_make_split_char(char **s, char **new, int k, int j)
 {
-	while (**s && !is_charset(**s))
+	while (*(*s) && !is_charset(**s))
 	{
-		new[j] = (char *)alloc(1, sizeof(char) * (count_char(*s, 'w') + 1));
-		if (!(*new[j]))
-			return (ft_free(*new));
+		new[j] = (char *)malloc(sizeof(char) * (count_char(*s, 'w') + 1));
+		if (!new[j])
+		{
+			ft_free(new);
+			return (NULL);
+		}
 		k = 0;
 		while (*(*s) && !is_charset(**s))
 			new[j][k++] = *(*s)++;
 		new[j][k] = 0;
 	}
-	return (NULL);
+	return (new[j]);
 }
 
-
 char	**ft_split_parsing(char *s)
-	{
-		char	**new;
-		size_t	count;
-		size_t	j;
-		size_t	k;
+{
+	char	**new;
+	size_t	count;
+	size_t	j;
+	size_t	k;
 
-		j = -1;
-		count = count_charset(s);
-		k = 0;
-		new = (char **)malloc(sizeof(char *) * (count + 1));
-		if (!s || !new)
-			return (NULL);
-		while (++j < count)
+	j = -1;
+	count = count_charset(s);
+	k = 0;
+	new = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!s || !new)
+		return (NULL);
+	while (++j < count)
+	{
+		if (is_charset(*s))
+			new[j] = ft_make_split(&s, new, k, j);
+		else
+			new[j] = ft_make_split_char(&s, new, k, j);
+	}
+	new[j] = 0;
+	return (new);
+}
+
+t_lst	*create_new(char *split, char **arg, char what)
+{
+	t_lst   *cell;
+
+	cell = malloc(sizeof(t_lst));
+	if (!cell)
+		return (NULL);
+	if (what == 'o')	//option
+		cell->opt = split;
+	if (what == 'c')	//commande
+		cell->cmd = split;	
+	if (what == 'a')	//argument
+		cell->arg = arg;
+	if (what == 'p')	//path
+		cell->path = split;
+	if (what == 'i')	//infile
+		cell->infile = split;
+	if (what == 't')	//outfile
+		cell->outfile = split;
+	cell->next = NULL;
+	printf("cell = %s\n", cell->cmd);
+	return (cell);
+}
+
+int	found_place_raft(char **split)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (split[i])
+	{
+		j = 0;
+		while (split[i][j])
 		{
-			if (is_charset(**s))
-				new[j] = ft_make_split(&s, new, k, j);
-			else
-				new[j] = ft_make_split_char(&s, new, k, j);
+			if (split[i][j] == '<' || split[i][j] == '>')
+				return (i);
+			j++;
 		}
-		new[j] = 0;
-		return (new);
+		i++;
 	}
-
-	t_lst	*create_new(char *split, char **arg, char what)
-	{
-		t_lst   *cell;
-
-		cell = malloc(sizeof(t_lst));
-		if (!cell)
-			return (NULL);
-		if (what == 'o')	//option
-			cell->opt = split;
-		if (what == 'c')	//commande
-			cell->cmd = split;	
-		if (what == 'a')	//argument
-			cell->arg = arg;
-		if (what == 'p')	//path
-			cell->path = split;
-		if (what == 'i')	//infile
-			cell->infile = split;
-		if (what == 't')	//outfile
-			cell->outfile = split;
-		cell->next = NULL;
-		printf("cell = %s\n", cell->cmd);
-		return (cell);
-	}
-
-	int	found_place_raft(char **split)
-	{
-		int	i;
-		int	j;
-
-		i = 0;
-		while (split[i])
-		{
-			j = 0;
-			while (split[i][j])
-			{
-				if (split[i][j] == '<' || split[i][j] == '>')
-					return (i);
-				j++;
-			}
-			i++;
-		}
-		return (-1);
-	}
+	return (-1);
+}
