@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/10/28 15:36:16 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/10/28 19:20:34 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ static size_t	count_charset(const char *s)
 	{
 		if (is_charset(s[i]))
 		{
+//			if (s[i] == '"')
+//				while (s[i] && s[i] != 
 			while (s[i] && is_charset(s[i]))
 				i++;
 			words++;
@@ -108,6 +110,12 @@ static size_t	count_char(const char *s, char c)
 	else if (c == 'o')
 		while (s[i] && is_charset(s[i]))
 			i++;
+	else if (c == 'q')
+		while (s[i] && s[i] != '"')
+			i++;
+	else if (c == 'u')
+		while (s[i] && s[i] != '\'')
+			i++;
 	return (i);
 }
 
@@ -125,9 +133,9 @@ static char	**ft_free(char **dst)
 	return (NULL);
 }
 
-char	*ft_make_split(char **s, char **new, int k, int j)
+char	*make_split(char **s, char **new, int k, int j)
 {
-	while (is_charset(**s))
+	while (is_charset(**s) && **s != '\'' && **s != '"')
 	{
 		new[j] = (char *)malloc(sizeof(char) * (count_char(*s, 'o') + 1));
 		if (!new[j])
@@ -143,7 +151,7 @@ char	*ft_make_split(char **s, char **new, int k, int j)
 	return (new[j]);
 }
 
-char	*ft_make_split_char(char **s, char **new, int k, int j)
+char	*make_split_char(char **s, char **new, int k, int j)
 {
 	while (*(*s) && !is_charset(**s))
 	{
@@ -161,6 +169,47 @@ char	*ft_make_split_char(char **s, char **new, int k, int j)
 	return (new[j]);
 }
 
+char	*make_split_q(char **s, char **new, int k, int j)
+{
+	while (*(*s) && *(*s) != '"')
+	{
+		new[j] = (char *)malloc(sizeof(char) * (count_char(*s, 'q') + 1));
+		if (!new[j])
+		{
+			ft_free(new);
+			return (NULL);
+		}
+		k = 0;
+		while (*(*s) && *(*s) != '"')
+			new[j][k++] = *(*s)++;
+		new[j][k++] = *(*s)++;
+		new[j][k] = 0;
+	}
+	return (new[j]);	
+}
+
+char	*make_split_u(char **s, char **new, int k, int j)
+{
+	printf("check\n");
+	// printf("s: -%c-\n", **s);
+	printf("s: -%s-\n", *s);
+	while (*(*s) && *(*s) != '\'')
+	{
+		new[j] = (char *)malloc(sizeof(char) * (count_char(*s, 'u') + 1));
+		if (!new[j])
+		{
+			ft_free(new);
+			return (NULL);
+		}
+		k = 0;
+		while (*(*s) && *(*s) != '\'')
+			new[j][k++] = *(*s)++;
+		new[j][k] = *(*s)++;
+		new[j][k] = 0;
+	}
+	return (new[j]);	
+}
+
 char	**ft_split_parsing(char *s)
 {
 	char	**new;
@@ -176,10 +225,27 @@ char	**ft_split_parsing(char *s)
 		return (NULL);
 	while (++j < count)
 	{
+		printf("SSSS: %s\n", s);	
 		if (is_charset(*s))
-			new[j] = ft_make_split(&s, new, k, j);
-		else
-			new[j] = ft_make_split_char(&s, new, k, j);
+		{
+			if (*s == '"')
+			{
+				new[j] = make_split_q(&s, new, k, j);
+			}
+			else if (*s == '\'')
+			{
+				//*(s)++;
+				printf("pluzun: %c\n", *s);
+				new[j] = make_split_u(&s, new, k, j);
+			}
+			else
+			{
+				printf("check\n");
+				new[j] = make_split(&s, new, k, j);
+			}
+		}
+		else if (!is_charset(*s))
+			new[j] = make_split_char(&s, new, k, j);
 	}
 	new[j] = 0;
 	return (new);
