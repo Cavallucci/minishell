@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split_parsing.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
+/*   Updated: 2021/10/30 18:59:22 by lcavallu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_sp	*init_sp()
@@ -20,7 +32,7 @@ int is_charset(char s)
     return (0);
 }
 
-static size_t   count_charset(const char *s)
+static int   count_charset(const char *s)
 {
     int     i;
     int  words;
@@ -31,16 +43,29 @@ static size_t   count_charset(const char *s)
     {   
         if (is_charset(s[i]))
         {
-//          if (s[i] == '"')
-//              while (s[i] && s[i] != 
-            while (s[i] && is_charset(s[i]))
-                i++;
+			if (s[i] == '"')
+			{
+				i++;
+				while (s[i] && s[i] != '"')
+					i++;
+				i++;
+			}
+			else if (s[i] == '\'')
+			{
+				i++;
+				while (s[i] && s[i] != '\'')
+					i++;
+				i++;
+			}
+			else
+            	while (s[i] && is_charset(s[i]) && s[i] != '"' && s[i] != '\'')
+                	i++;
             words++;
         }
         else
         {
             while (s[i] && !is_charset(s[i]))
-                i++;
+				i++;
             words++;
         }
     }
@@ -98,7 +123,7 @@ static char	*make_split_char(char *s, t_sp *sp)
 
 static char	*make_split_q(char *s, t_sp *sp)
 {
-	s[sp->line++];
+	sp->line++;
 	while (s[sp->line] && s[sp->line] != '"')
 	{
 		sp->new[sp->j] = (char *)malloc(sizeof(char) * (count_char(s, 'q') + 1));
@@ -106,16 +131,20 @@ static char	*make_split_q(char *s, t_sp *sp)
 			return (ft_free(sp->new));
 		sp->k = 0;
 		while (s[sp->line] && s[sp->line] != '"')
+		{
 			sp->new[sp->j][sp->k] = s[sp->line];
-		sp->new[sp->j][sp->k++] = s[sp->line++];
-		sp->new[sp->j][sp->k++] = 0;
+			sp->k++;
+			sp->line++;
+		}
+	//	sp->new[sp->j][sp->k++] = s[sp->line++];
+		sp->new[sp->j][sp->k] = 0;
 	}
 	return (sp->new[sp->j]);
 }
 
 static char	*make_split_u(char *s, t_sp *sp)
 {
-	s[sp->line++];
+	sp->line++;
 	while (s[sp->line] && s[sp->line] != '\'')
 	{
 		sp->new[sp->j] = (char *)malloc(sizeof(char) * (count_char(s, 'u') + 1));
@@ -123,7 +152,11 @@ static char	*make_split_u(char *s, t_sp *sp)
 			return (NULL);
 		sp->k = 0;
 		while (s[sp->line] && s[sp->line] != '\'')
+		{
 			sp->new[sp->j][sp->k] = s[sp->line];
+			sp->k++;
+			sp->line++;
+		}
 		sp->new[sp->j][sp->k++] = s[sp->line++];
 		sp->new[sp->j][sp->k++] = 0;
 	}
@@ -153,25 +186,25 @@ char	**ft_split_parsing(char *s)
 	if (!sp)
 		return (NULL);
 	sp->j = -1;
-	sp->count = count_charset;
+	sp->count = count_charset(s);
 	sp->k = 0;
-	sp->new = (char **)malloc(sizeof(char *) * (count + 1));
+	sp->new = (char **)malloc(sizeof(char *) * (sp->count + 1));
 	if (!s || !sp->new)
 		return (NULL);
-	while (++sp->j < count)
+	while (++sp->j < sp->count)
 	{
 		if (is_charset(s[sp->line]))
 		{
 			if (s[sp->line] == '"')
-				make_split_q(s, sp);
+				sp->new[sp->j] = make_split_q(s, sp);
 			else if (s[sp->line] == '\'')
-				make_split_u(s, sp);
+				sp->new[sp->j] = make_split_u(s, sp);
 			else
-				make_split(s, sp);
+				sp->new[sp->j] = make_split(s, sp);
 		}
 		else if (!is_charset(s[sp->line]))
-			make_split_char(s, sp);
+			sp->new[sp->j] = make_split_char(s, sp);
 	}
-	sp.new[sp->j] = 0;
-	return (new);
+	sp->new[sp->j] = 0;
+	return (sp->new);
 }
