@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/10/28 19:20:34 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/10/30 16:46:09 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void    print_list(t_lst *list)
 		i++;
 	}
 }
-
+/*
 int	is_charset(char s)
 {
 	if (s == ' ' || s == '|' || s == '&' || s == '\'' || s == '"' || s == '<' || s == '>')
@@ -190,9 +190,6 @@ char	*make_split_q(char **s, char **new, int k, int j)
 
 char	*make_split_u(char **s, char **new, int k, int j)
 {
-	printf("check\n");
-	// printf("s: -%c-\n", **s);
-	printf("s: -%s-\n", *s);
 	while (*(*s) && *(*s) != '\'')
 	{
 		new[j] = (char *)malloc(sizeof(char) * (count_char(*s, 'u') + 1));
@@ -230,17 +227,15 @@ char	**ft_split_parsing(char *s)
 		{
 			if (*s == '"')
 			{
+				s++;
 				new[j] = make_split_q(&s, new, k, j);
 			}
 			else if (*s == '\'')
 			{
-				//*(s)++;
-				printf("pluzun: %c\n", *s);
 				new[j] = make_split_u(&s, new, k, j);
 			}
 			else
 			{
-				printf("check\n");
 				new[j] = make_split(&s, new, k, j);
 			}
 		}
@@ -250,7 +245,7 @@ char	**ft_split_parsing(char *s)
 	new[j] = 0;
 	return (new);
 }
-
+*/
 t_lst	*create_new(char *split, char **arg, char what)
 {
 	t_lst   *cell;

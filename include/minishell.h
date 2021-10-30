@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/10/27 15:06:10 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/10/30 16:54:15 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,15 @@ typedef struct s_sep
     int double_raft_right;
 }t_sep;
 
+typedef struct s_sp
+{
+    int     line;
+    int     count;
+    int     j;
+    int     k;
+    char    **new;
+}t_sp;
+
 /*---------------------lst.c--------------------------*/
 
 void	add_cell(t_env **env, t_env *new);
@@ -78,18 +87,22 @@ size_t	ft_strlen(const char *str);
 void	ft_putstr(const char *s);
 void	ft_putchar(char c);
 
-/*---------------------split.c--------------------------*/
+/*---------------------ft_split_parsing.c--------------------------*/
 
-char	**ft_split(const char *s, char c);
 void	free_split(char **args);
+char	**ft_split(const char *s, char c);
+
+/*---------------------ft_split_parsing.c--------------------------*/
+
+t_sp	*init_sp();
+int		is_charset(char s);
+char	**ft_split_parsing(char *s);
 
 /*---------------------parsing_utils.c--------------------*/
 
 t_lst   *create_cell(char *cmd);
 t_lst   *add_cell_pos(t_lst *list, char *cmd, int pos);
 void    print_list(t_lst *list);
-int		is_charset(char s);
-char    **ft_split_parsing(char *s);
 t_lst	*create_new(char *split, char **arg, char what);
 int		found_place_raft(char **split);
 

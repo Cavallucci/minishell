@@ -6,7 +6,7 @@
 #    By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/21 14:52:01 by lcavallu          #+#    #+#              #
-#    Updated: 2021/10/21 14:52:05 by lcavallu         ###   ########.fr        #
+#    Updated: 2021/10/30 16:51:44 by lcavallu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,8 @@ SOURCES =	mini.c \
 			ft_split.c \
 			lst.c \
 			utils.c \
-			parsing_utils.c
+			parsing_utils.c \
+			ft_split_parsing.c
 
 SRC	= $(addprefix $(SRC_PATH)/,$(SOURCES))
 

@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/10/28 15:40:33 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/10/30 16:03:30 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	print_sep(t_sep *sep, char **split)
 {
 	printf("| = %i\n&& = %i\n' = %i\n\" = %i\n< = %i\n> = %i\n<< = %i\n>> = %i\n", sep->pipe, sep->double_and, sep->simple_quo, sep->double_quo, sep->simple_raft_left, sep->simple_raft_right, sep->double_raft_left, sep->double_raft_right);
 	for(int q=0; split[q]; q++)
-		printf("%s\n", split[q]);
+		printf("split[%i] = %s\n", q, split[q]);
 }
 
 void	check_dash(char **split)
