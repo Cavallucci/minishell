@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/10/30 16:54:15 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/02 17:57:57 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,8 @@ typedef struct s_env t_env;
 struct s_lst //structure pour chaque commande "ls -la"
 {
 	char	*cmd;
-	char	*opt;
 	char	**arg;
 	char	*path;
-	char	*infile;
-	char	*outfile;
 	int		input;
 	int		output;
 	t_lst	*next;
@@ -108,7 +105,7 @@ int		found_place_raft(char **split);
 
 /*---------------------parsing.c--------------------------*/
 
-void	check_separators(t_data *d, t_sep *sep);
+int		check_separators(t_data *d, t_sep *sep);
 void	init_sep(t_sep *sep);
 void	print_sep(t_sep *sep, char **split);
 void	check_dash(char **split);

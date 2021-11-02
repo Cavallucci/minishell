@@ -6,13 +6,13 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/10/30 16:03:30 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/02 16:28:20 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	check_separators(t_data *d, t_sep *sep)
+int	check_separators(t_data *d, t_sep *sep)
 {
 	int	i;
 
@@ -37,6 +37,12 @@ void	check_separators(t_data *d, t_sep *sep)
 			sep->double_raft_right++;	
 		i++;
 	}
+	if (sep->simple_quo % 2 == 1 || sep->double_quo % 2 == 1)
+	{
+		ft_putstr("Syntax error\n");
+		return (1);
+	}
+	return (0);
 }
 
 void	init_sep(t_sep *sep)
@@ -102,15 +108,27 @@ void	check_infile_outfile(char **split, t_sep *sep)
 t_lst	*parsing(t_data *d)
 {
 	t_sep	sep[1];
+	char	**split_pipe;
 	char	**split;
+	int		i;
 
+	i = 0;
 	init_sep(sep);
-	check_separators(d, sep);
-	split = ft_split_parsing(d->line); // diviser la fonction split
-	check_infile_outfile(split, sep); // detecter les chevrons && infiles outfiles
-	// detecter la commande
-	check_dash(split);	// detecter l'option
-	// detecter les guillemets && les args 
-	print_sep(sep, split);
+	if (!check_separators(d, sep))
+	{
+		split_pipe = ft_split(d->line, '|');
+	//	while (split_pipe[i])
+	//	{
+			split = ft_split_parsing(split_pipe[i]);
+	//		i++;
+	//	}
+		//detacher les chevrons colles 
+		//check_infile_outfile(split, sep);
+		//detecter les chevrons && infiles outfiles
+		//detecter la commande
+		//detecter les guillemets && les args 
+		//free split_pipe
+		print_sep(sep, split);
+	}
 	return (NULL);
 }
