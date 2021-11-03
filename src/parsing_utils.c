@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/10/30 19:00:39 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/02 19:09:44 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ t_lst   *create_cell(char *cmd)
 	if (!(cell))
 		return (NULL);
 	cell->cmd = cmd;
-	cell->opt = NULL;
-	cell->path = NULL;
 	return (cell);
 } 
 
@@ -58,7 +56,6 @@ void    print_list(t_lst *list)
 		printf("-----------------------------------\n");
 		printf("| i = %d                            \n", i);
 		printf("| cmd = %s            \n", list->cmd);
-		printf("| option = %s            \n", list->opt);
 		printf("-----------------------------------\n");
 		list = list->next;
 		i++;
@@ -72,18 +69,16 @@ t_lst	*create_new(char *split, char **arg, char what)
 	cell = malloc(sizeof(t_lst));
 	if (!cell)
 		return (NULL);
-	if (what == 'o')	//option
-		cell->opt = split;
 	if (what == 'c')	//commande
 		cell->cmd = split;	
-	if (what == 'a')	//argument
-		cell->arg = arg;
 	if (what == 'p')	//path
 		cell->path = split;
+	if (what == 'a') // arguments
+		cell->arg = arg;
 	if (what == 'i')	//infile
-		cell->infile = split;
-	if (what == 't')	//outfile
-		cell->outfile = split;
+		cell->input = 0;
+	if (what == 'o')	//outfile
+		cell->output = 0;
 	cell->next = NULL;
 	printf("cell = %s\n", cell->cmd);
 	return (cell);
