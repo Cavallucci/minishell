@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/02 17:57:57 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/04 17:08:46 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int		found_place_raft(char **split);
 
 /*---------------------parsing.c--------------------------*/
 
-int		check_separators(t_data *d, t_sep *sep);
+void	check_separators(t_data *d, t_sep *sep);
 void	init_sep(t_sep *sep);
 void	print_sep(t_sep *sep, char **split);
 void	check_dash(char **split);

@@ -6,13 +6,13 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/02 16:28:20 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/04 17:09:52 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_separators(t_data *d, t_sep *sep)
+void	fill_sep(t_data *d, t_sep *sep)
 {
 	int	i;
 
@@ -37,6 +37,10 @@ int	check_separators(t_data *d, t_sep *sep)
 			sep->double_raft_right++;	
 		i++;
 	}
+}
+
+int	check_sep(t_sep *sep)
+{
 	if (sep->simple_quo % 2 == 1 || sep->double_quo % 2 == 1)
 	{
 		ft_putstr("Syntax error\n");
@@ -105,6 +109,29 @@ void	check_infile_outfile(char **split, t_sep *sep)
 	
 }
 
+int	check_chev(char **split)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (split[i])
+	{
+		j = 0;
+		if (split[i][0] != '"' && split[i][0] != '\'')
+		{
+			while (split[i][j])
+			{
+				if ((split[i][j] == '<' && split[i][j + 1] == '<' && split[i][j + 2] == '<' && split[i][j + 3] == '<') || (split[i][j] == '>' && split[i][j + 1] == '>' && split[i][j + 2] == '>' && split[i][j + 3] == '>') || (split[i][j] == '<' && split[i][j + 1] == '>') || (split[i][j] == '>' && split[i][j + 1] == '<'))
+					return (1);
+				j++;
+			}
+		}
+		i++;
+	}
+	return (0);
+}
+
 t_lst	*parsing(t_data *d)
 {
 	t_sep	sep[1];
@@ -114,21 +141,27 @@ t_lst	*parsing(t_data *d)
 
 	i = 0;
 	init_sep(sep);
-	if (!check_separators(d, sep))
+	fill_sep(d, sep);
+	if (!check_sep(sep))
 	{
 		split_pipe = ft_split(d->line, '|');
 	//	while (split_pipe[i])
 	//	{
 			split = ft_split_parsing(split_pipe[i]);
-	//		i++;
+			if (!check_chev(split))
+			{
+	//			i++;
+			//detacher les chevrons colles 
+			//check_infile_outfile(split, sep);
+			//detecter les chevrons && infiles outfiles
+			//detecter la commande
+			//detecter les guillemets && les args 
+			//free split_pipe
+				print_sep(sep, split);
+			}
+			else
+				printf("free_split\n");
 	//	}
-		//detacher les chevrons colles 
-		//check_infile_outfile(split, sep);
-		//detecter les chevrons && infiles outfiles
-		//detecter la commande
-		//detecter les guillemets && les args 
-		//free split_pipe
-		print_sep(sep, split);
 	}
 	return (NULL);
 }
