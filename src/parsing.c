@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/19 14:18:42 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/19 16:02:30 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,26 @@ int	check_chev(char **split)
 	return (0);
 }
 
+void	fill_in_out_file(char **split)
+{
+	int	place_raft;
+
+	place_raft = found_place_raft(split);
+
+	if (<)
+		open(file, O_RDONLY);
+	if (>)
+		open(file, O_CREAT | O_RDWR | O_TRUNC, 0644);
+	if (>>)
+		open(file, O_CREAT | O_RDWR | O_APPEND, 0644);
+	if (<<)
+	{
+		if (infile > 0)
+			close(infile);
+		heredoc();
+	}
+}
+
 t_lst	*parsing(t_data *d)
 {
 	t_sep	sep[1];
@@ -138,22 +158,23 @@ t_lst	*parsing(t_data *d)
 	if (!check_sep(sep))
 	{
 		split_pipe = ft_split(d->line, '|');
-	//	while (split_pipe[i])
-	//	{
+		while (split_pipe[i])
+		{
 			split = ft_split_parsing(split_pipe[i]);
 			if (!check_chev(split))
 			{
-	//			i++;
-				check_infile_outfile(split, sep);
-			//detecter les chevrons && infiles outfiles
+				check_infile_outfile(split, sep); //--> detecte la cmd quand il y a chevrons
+				fill_in_out_file(split);
+			//ouvrir les fichiers avec chevrons
 			//detecter la commande
 			//detecter les guillemets && les args 
 			//free split_pipe
 				print_sep(sep, split);
+				i++;
 			}
 			else
 				printf("free_split et split_pipe\n");
-	//	}
+		}
 	}
 	return (NULL);
 }

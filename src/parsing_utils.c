@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/19 14:03:43 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/19 15:47:44 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,10 @@ t_lst	*create_new(char *split, char **arg, char what)
 		cell->path = split;
 	if (what == 'a') // arguments
 		cell->arg = arg;
+	if (what == 'i')
+		cell->infile = split; //infile
+	if (what == 'o')
+		cell->outfile = split; // outfile
 	cell->next = NULL;
 	if (cell->cmd)
 		printf("cmd = %s\n", cell->cmd);
