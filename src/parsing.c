@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/19 16:02:30 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/19 17:11:35 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	check_infile_outfile(char **split, t_sep *sep)
 
 	if (sep->simple_raft_left > 0 || sep->simple_raft_right > 0)
 	{
-		place_raft = found_place_raft(split);
+		place_raft = found_place_raft(split, 0);
 		if (place_raft != -1)
 		{
 			if (split[place_raft][0] == '<')
@@ -129,8 +129,13 @@ void	fill_in_out_file(char **split)
 {
 	int	place_raft;
 
+	place_raft = found_place_raft(split, 0);
+	while (place_raft != -1)
+	{
+		if (split[place_raft][0] == '<')
+			open(file
+	}
 	place_raft = found_place_raft(split);
-
 	if (<)
 		open(file, O_RDONLY);
 	if (>)

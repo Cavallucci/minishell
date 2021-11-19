@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/19 15:47:44 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/19 17:09:03 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,10 @@ t_lst	*create_new(char *split, char **arg, char what)
 	return (cell);
 }
 
-int	found_place_raft(char **split)
+int	found_place_raft(char **split, int i)
 {
-	int	i;
 	int	j;
 
-	i = 0;
 	while (split[i])
 	{
 		j = 0;
