@@ -6,11 +6,38 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:50:42 by mkralik           #+#    #+#             */
-/*   Updated: 2021/10/27 14:17:26 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/12 15:15:35 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*get_key(char *arg, t_env *env)
+{
+	t_env	*tmp;
+
+	tmp = env;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, arg))
+			return (tmp->value);
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
+char	*design_prompt(t_data *data)
+{
+	char	*user;
+
+	user = get_key("USER", data->env);
+	user = ft_strjoin("\e[34;1m", user);
+	user = ft_strjoin(user, "\e[0m: ");
+	user = ft_strjoin(user, "\e[92;7m");
+	user = ft_strjoin(user, "minishell >");
+	user = ft_strjoin(user, "\e[0m$ ");
+	return (user);
+}
 
 void	print_env(t_env *env)
 {
@@ -72,8 +99,10 @@ int	main(int argc, char **argv, char **envp)
 	d->prompt = "minishell > ";
 	while (1)
 	{
-		d->line = readline(d->prompt);
-		d->cmd_lst = parsing(d);
+		//d->prompt = design_prompt(d);
+		//printf("%s\n", d->prompt);
+	 	d->line = readline(d->prompt);
+	 	d->cmd_lst = parsing(d);
 	}
 	return (0);
 }

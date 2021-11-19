@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 14:00:01 by mkralik           #+#    #+#             */
-/*   Updated: 2021/10/19 14:40:54 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/11/04 18:29:33 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,3 +32,47 @@ void	ft_putchar(char c)
 {
 	write(1, &c, 1);
 }
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	while (s && *s)
+		write(fd, s++, 1);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	char	*d;
+	size_t	i;
+	size_t	j;
+
+	if (!s1 || !s2)
+		return (NULL);
+	d = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (d == NULL)
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		d[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j])
+	{
+		d[i + j] = s2[j];
+		j++;
+	}
+	d[i + j] = 0;
+	return (d);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+

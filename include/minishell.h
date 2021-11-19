@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/04 17:08:46 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/05 15:46:58 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ typedef struct s_sp
     int     j;
     int     k;
     char    **new;
+	int		s_quote;
+	int		d_quote;
 }t_sp;
 
 /*---------------------lst.c--------------------------*/
@@ -83,6 +85,8 @@ t_env	*ft_lstlast(t_env *lst);
 size_t	ft_strlen(const char *str);
 void	ft_putstr(const char *s);
 void	ft_putchar(char c);
+char    *ft_strjoin(char *s1, char *s2);
+int		ft_strcmp(char *s1, char *s2);
 
 /*---------------------ft_split_parsing.c--------------------------*/
 
@@ -114,6 +118,8 @@ t_lst	*parsing(t_data *d);
 
 /*------------------------mini.c--------------------------*/
 
+char    *design_prompt(t_data *data);
+char    *get_key(char *arg, t_env *env);
 void	print_env(t_env *env);
 t_env	*get_env(char **envp);
 t_data	*init_data(char **envp);

@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/04 17:09:52 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/19 14:18:42 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,28 @@
 void	fill_sep(t_data *d, t_sep *sep)
 {
 	int	i;
+	int	s_quote;
+	int	d_quote;
 
 	i = 0;
+	s_quote = 0;
+	d_quote = 0;
 	while (d->line[i])
 	{
 		if (d->line[i] == '|')
 			sep->pipe++;
 		if (d->line[i] == '&' && d->line[i + 1] == '&')
 			sep->double_and++;
-		if (d->line[i] == '\'')
+		if (d->line[i] == '\'' && d_quote == 0)
+		{
+			s_quote = 1;
 			sep->simple_quo++;
-		if (d->line[i] == '"')
+		}
+		if (d->line[i] == '"' && s_quote == 0)
+		{
+			d_quote = 1;
 			sep->double_quo++;
+		}
 		if (d->line[i] == '<' && d->line[i + 1] != '<')
 			sep->simple_raft_left++;
 		if (d->line[i] == '>' && d->line[i + 1] != '>')
@@ -51,7 +61,6 @@ int	check_sep(t_sep *sep)
 
 void	init_sep(t_sep *sep)
 {
-//malloc sep ??
 	sep->pipe = 0;
 	sep->double_and = 0;
     sep->simple_quo = 0;
@@ -69,19 +78,6 @@ void	print_sep(t_sep *sep, char **split)
 		printf("split[%i] = %s\n", q, split[q]);
 }
 
-void	check_dash(char **split)
-{
-	int	i;
-
-	i = 0;
-	while (split[i])
-	{
-		if (split[i][0] == '-')
-			create_new(split[i], split, 'o');
-		i++;
-	}
-}
-
 void	check_infile_outfile(char **split, t_sep *sep)
 {
 	int	place_raft;
@@ -93,7 +89,6 @@ void	check_infile_outfile(char **split, t_sep *sep)
 		{
 			if (split[place_raft][0] == '<')
 			{
-				create_new(split[place_raft + 1], NULL, 'i');
 				if (place_raft != 0)
 					create_new(split[place_raft - 1], NULL, 'c');
 				else
@@ -101,12 +96,10 @@ void	check_infile_outfile(char **split, t_sep *sep)
 			}
 			else if (split[place_raft][0] == '>')
 			{
-				create_new(split[place_raft + 1], NULL, 'o');
 				create_new(split[place_raft - 1], NULL, 'c');
 			}
 		}
 	}
-	
 }
 
 int	check_chev(char **split)
@@ -151,8 +144,7 @@ t_lst	*parsing(t_data *d)
 			if (!check_chev(split))
 			{
 	//			i++;
-			//detacher les chevrons colles 
-			//check_infile_outfile(split, sep);
+				check_infile_outfile(split, sep);
 			//detecter les chevrons && infiles outfiles
 			//detecter la commande
 			//detecter les guillemets && les args 
@@ -160,7 +152,7 @@ t_lst	*parsing(t_data *d)
 				print_sep(sep, split);
 			}
 			else
-				printf("free_split\n");
+				printf("free_split et split_pipe\n");
 	//	}
 	}
 	return (NULL);
