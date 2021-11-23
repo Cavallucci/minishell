@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/05 15:46:58 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/22 15:01:37 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,8 @@ t_lst   *create_cell(char *cmd);
 t_lst   *add_cell_pos(t_lst *list, char *cmd, int pos);
 void    print_list(t_lst *list);
 t_lst	*create_new(char *split, char **arg, char what);
-int		found_place_raft(char **split);
+int		found_place_raft(char **split, int i);
+void    add_cell_parsing(t_data *d, t_lst *new);
 
 /*---------------------parsing.c--------------------------*/
 
@@ -113,7 +114,7 @@ void	check_separators(t_data *d, t_sep *sep);
 void	init_sep(t_sep *sep);
 void	print_sep(t_sep *sep, char **split);
 void	check_dash(char **split);
-void	check_infile_outfile(char **split, t_sep *sep);
+void	check_infile_outfile(t_data *d, char **split, t_sep *sep);
 t_lst	*parsing(t_data *d);
 
 /*------------------------mini.c--------------------------*/

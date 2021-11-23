@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/19 17:11:35 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/23 14:27:40 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,10 @@ void	print_sep(t_sep *sep, char **split)
 		printf("split[%i] = %s\n", q, split[q]);
 }
 
-void	check_infile_outfile(char **split, t_sep *sep)
+void	check_infile_outfile(t_data *d, char **split, t_sep *sep)
 {
 	int	place_raft;
+	t_lst	*list;
 
 	if (sep->simple_raft_left > 0 || sep->simple_raft_right > 0)
 	{
@@ -90,13 +91,25 @@ void	check_infile_outfile(char **split, t_sep *sep)
 			if (split[place_raft][0] == '<')
 			{
 				if (place_raft != 0)
-					create_new(split[place_raft - 1], NULL, 'c');
+				{
+					if (split[place_raft - 1][0] == '-')
+						place_raft -= 1;
+					list = create_new(split[place_raft - 1], NULL, 'c');
+					add_cell_parsing(d, list);
+					list = create_new(split[place_raft
+				}
 				else
-					create_new(split[place_raft + 2], NULL, 'c');
+				{
+					list = create_new(split[place_raft + 2], NULL, 'c');
+					add_cell_parsing(d, list);
+				}
 			}
 			else if (split[place_raft][0] == '>')
 			{
-				create_new(split[place_raft - 1], NULL, 'c');
+				if (split[place_raft - 1][0] == '-')
+					place_raft -= 1;
+				list = create_new(split[place_raft - 1], NULL, 'c');
+				add_cell_parsing(d, list);
 			}
 		}
 	}
@@ -132,10 +145,13 @@ void	fill_in_out_file(char **split)
 	place_raft = found_place_raft(split, 0);
 	while (place_raft != -1)
 	{
-		if (split[place_raft][0] == '<')
-			open(file
+		if (split[place_raft][0] == '<' && split[place_raft][1] != '<')
+		{
+			if (split[place_raft
+			open(, O_RDONLY);
+		}
+		place_raft = found_place_raft(split, place_raft);
 	}
-	place_raft = found_place_raft(split);
 	if (<)
 		open(file, O_RDONLY);
 	if (>)
@@ -168,18 +184,18 @@ t_lst	*parsing(t_data *d)
 			split = ft_split_parsing(split_pipe[i]);
 			if (!check_chev(split))
 			{
-				check_infile_outfile(split, sep); //--> detecte la cmd quand il y a chevrons
-				fill_in_out_file(split);
-			//ouvrir les fichiers avec chevrons
+				check_infile_outfile(d, split, sep); //--> detecte la cmd quand il y a chevrons
+				fill_in_out_file(split, );			//ouvrir et detecte les fichiers avec chevrons
 			//detecter la commande
 			//detecter les guillemets && les args 
 			//free split_pipe
 				print_sep(sep, split);
-				i++;
 			}
 			else
 				printf("free_split et split_pipe\n");
+			i++;
 		}
+		print_list(d->cmd_lst);
 	}
 	return (NULL);
 }

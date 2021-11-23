@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/19 17:09:03 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/23 13:43:36 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,22 @@ t_lst   *create_cell(char *cmd)
 		return (NULL);
 	cell->cmd = cmd;
 	return (cell);
-} 
+}
+
+void	add_cell_parsing(t_data *d, t_lst *new)
+{
+    t_lst	*last;
+
+    if (!(d->cmd_lst))
+        d->cmd_lst = new;
+    else
+    {
+		last = d->cmd_lst;
+		while (last->next != NULL)
+			last = last->next;
+        last->next = new;
+    }
+}
 
 t_lst   *add_cell_pos(t_lst *list, char *cmd, int pos)
 { 
@@ -75,11 +90,11 @@ t_lst	*create_new(char *split, char **arg, char what)
 		cell->path = split;
 	if (what == 'a') // arguments
 		cell->arg = arg;
-	if (what == 'i')
-		cell->infile = split; //infile
+/*	if (what == 'i')
+		cell->input = split; //infile
 	if (what == 'o')
-		cell->outfile = split; // outfile
-	cell->next = NULL;
+		cell->output = split; // outfile
+*/	cell->next = NULL;
 	if (cell->cmd)
 		printf("cmd = %s\n", cell->cmd);
 	return (cell);
