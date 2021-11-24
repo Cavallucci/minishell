@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/24 13:22:36 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/24 15:17:26 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,14 @@ typedef struct s_data
 
 typedef struct s_sep
 {
-    int pipe;
-    int double_and;
-    int simple_quo;
-    int double_quo;
-    int simple_raft_left;
-    int simple_raft_right;
-    int double_raft_left;
-    int double_raft_right;
+	int		pipe;
+	int		double_and;
+	int		simple_quo;
+	int		double_quo;
+	int		simple_raft_left;
+	int		simple_raft_right;
+	int		double_raft_left;
+	int		double_raft_right;
 	char	*infile;
 	char	*outfile;
 }t_sep;

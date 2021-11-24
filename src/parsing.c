@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/24 14:36:24 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/24 15:12:50 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,10 +142,12 @@ t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell)
 			}
 			else if (split[place_raft][0] == '>')
 			{
-				sep->outfile = split[place_raft + 1];
+			/*	sep->outfile = split[place_raft + 1];
 				while (split[place_raft - 1][0] == '-')
 					place_raft -= 1;
 				cell = create_new_char(cell, split[place_raft - 1], NULL, 'c');
+		*/
+				cell = create_new_char(cell, split[0], NULL, 'c');
 			}
 		}
 	}
@@ -183,6 +185,12 @@ t_lst	*fill_in_out_file(char **split, t_sep *sep, t_lst *cell)
 	return (cell);
 }
 
+t_lst	*found_path(t_lst *cell, t_data *d)
+{
+	printf("env = %s\n", d->env->value);
+	return (cell);
+}
+
 t_lst	*parsing(t_data *d)
 {
 	t_sep	sep[1];
@@ -205,16 +213,15 @@ t_lst	*parsing(t_data *d)
 				cell = init_cell();
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
 				cell = fill_in_out_file(split, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
+				cell = found_path(cell, d);	
+				//check path
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
 
 
-			//detecter la commande
 			//detecter les guillemets && les args 
 			//free split_pipe
 				print_sep(sep, split);
-				print_list(d->cmd_lst);
-				return (NULL);
 			}
 			else
 				printf("free_split et split_pipe\n");
