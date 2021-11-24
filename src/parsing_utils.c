@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/23 13:43:36 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/24 14:12:44 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	add_cell_parsing(t_data *d, t_lst *new)
 		last = d->cmd_lst;
 		while (last->next != NULL)
 			last = last->next;
-        last->next = new;
+		last->next = new;
     }
 }
 
@@ -69,34 +69,35 @@ void    print_list(t_lst *list)
 	while (list)
 	{
 		printf("-----------------------------------\n");
-		printf("| i = %d                            \n", i);
+		printf("| pipe = %d                        \n", i);
 		printf("| cmd = %s            \n", list->cmd);
+//		printf("| arg = %s			  \n", list->arg);
+		printf("| path = %s			  \n", list->path);
+		printf("| input = %i		  \n", list->input);
+		printf("| output = %i		  \n", list->output);
 		printf("-----------------------------------\n");
 		list = list->next;
 		i++;
 	}
 }
 
-t_lst	*create_new(char *split, char **arg, char what)
+t_lst	*create_new_char(t_lst *cell, char *split, char **arg, char what)
 {
-	t_lst   *cell;
-
-	cell = malloc(sizeof(t_lst));
-	if (!cell)
-		return (NULL);
 	if (what == 'c')	//commande
 		cell->cmd = split;	
 	if (what == 'p')	//path
 		cell->path = split;
 	if (what == 'a') // arguments
 		cell->arg = arg;
-/*	if (what == 'i')
-		cell->input = split; //infile
+	return (cell);
+}
+
+t_lst	*create_new_int(t_lst *cell, char what, int file)
+{
+	if (what == 'i')
+		cell->input = file; //input
 	if (what == 'o')
-		cell->output = split; // outfile
-*/	cell->next = NULL;
-	if (cell->cmd)
-		printf("cmd = %s\n", cell->cmd);
+		cell->output = file; // output
 	return (cell);
 }
 

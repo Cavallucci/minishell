@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/22 15:01:37 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/24 13:22:36 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ typedef struct s_sep
     int simple_raft_right;
     int double_raft_left;
     int double_raft_right;
+	char	*infile;
+	char	*outfile;
 }t_sep;
 
 typedef struct s_sp
@@ -104,9 +106,12 @@ char	**ft_split_parsing(char *s);
 t_lst   *create_cell(char *cmd);
 t_lst   *add_cell_pos(t_lst *list, char *cmd, int pos);
 void    print_list(t_lst *list);
-t_lst	*create_new(char *split, char **arg, char what);
+t_lst	*create_new(char *split, char **arg, char what, int file);
 int		found_place_raft(char **split, int i);
 void    add_cell_parsing(t_data *d, t_lst *new);
+t_lst   *create_new_char(t_lst *cell, char *split, char **arg, char what);
+t_lst   *create_new_int(t_lst *cell, char what, int file);
+
 
 /*---------------------parsing.c--------------------------*/
 
@@ -114,7 +119,8 @@ void	check_separators(t_data *d, t_sep *sep);
 void	init_sep(t_sep *sep);
 void	print_sep(t_sep *sep, char **split);
 void	check_dash(char **split);
-void	check_infile_outfile(t_data *d, char **split, t_sep *sep);
+t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell);
+t_lst	*fill_in_out_file(char **split, t_sep *sep, t_lst *cell);
 t_lst	*parsing(t_data *d);
 
 /*------------------------mini.c--------------------------*/
