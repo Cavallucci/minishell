@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/24 15:12:50 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/24 17:46:10 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,49 @@ t_lst	*found_path(t_lst *cell, t_data *d)
 	return (cell);
 }
 
+int	found_cmd(char **split, t_lst *cell)
+{
+	int	i;
+
+	i = 0;
+	while (split[i])
+	{
+		if (ft_strcmp(cell->cmd, split[i]))
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+int	is_charset_arg(char c)
+{
+	if (c == '<' || c == '>' || c == '|')
+		return (1);
+	return (0)
+}
+
+t_lst	*fill_arg(char **split, t_lst *cell)
+{
+	int		place_cmd;
+	char	**arg;
+	int		i;
+
+	i = 0;
+	place_cmd = found_cmd(split, cell);
+	if (place_cmd != -1)
+	{
+		while (split[place_cmd] && !is_charset_arg(split[place_cmd]))
+		{
+			arg[i] = split[place_cmd];
+			i++;
+			place_cmd++;
+		}
+		arg[i] = '\0'
+		cell = create_new_char(cell, NULL, arg, 'a');
+	}
+	return (cell);
+}
+
 t_lst	*parsing(t_data *d)
 {
 	t_sep	sep[1];
@@ -215,6 +258,7 @@ t_lst	*parsing(t_data *d)
 				cell = fill_in_out_file(split, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
 				cell = found_path(cell, d);	
 				//check path
+				cell = fill_arg(split, cell);
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
 
