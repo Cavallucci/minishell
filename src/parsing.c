@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/24 17:46:10 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/25 15:16:45 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ int	is_charset_arg(char c)
 {
 	if (c == '<' || c == '>' || c == '|')
 		return (1);
-	return (0)
+	return (0);
 }
 
 t_lst	*fill_arg(char **split, t_lst *cell)
@@ -217,18 +217,26 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 	int		place_cmd;
 	char	**arg;
 	int		i;
-
+	int		tmp;
+	
 	i = 0;
 	place_cmd = found_cmd(split, cell);
 	if (place_cmd != -1)
 	{
-		while (split[place_cmd] && !is_charset_arg(split[place_cmd]))
+		tmp = place_cmd;
+		while (split[place_cmd])
+			place_cmd++;
+		arg = malloc(sizeof(char**) * place_cmd);
+		if (!arg)
+			return (NULL);
+		place_cmd = tmp - 1;
+		while (split[place_cmd] && !is_charset_arg(split[place_cmd][0]))
 		{
 			arg[i] = split[place_cmd];
 			i++;
 			place_cmd++;
 		}
-		arg[i] = '\0'
+		i = 0;
 		cell = create_new_char(cell, NULL, arg, 'a');
 	}
 	return (cell);
@@ -256,12 +264,11 @@ t_lst	*parsing(t_data *d)
 				cell = init_cell();
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
 				cell = fill_in_out_file(split, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
-				cell = found_path(cell, d);	
-				//check path
+			//	cell = found_path(cell, d);	//check path
 				cell = fill_arg(split, cell);
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
-
+			printf("arg === %s\n", d->cmd_lst->arg[0]);
 
 			//detecter les guillemets && les args 
 			//free split_pipe

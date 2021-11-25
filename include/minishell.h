@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/24 15:17:26 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/25 13:59:24 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int		found_place_raft(char **split, int i);
 void    add_cell_parsing(t_data *d, t_lst *new);
 t_lst   *create_new_char(t_lst *cell, char *split, char **arg, char what);
 t_lst   *create_new_int(t_lst *cell, char what, int file);
-
+char    *ft_strcpy(char *dest, char *src);
 
 /*---------------------parsing.c--------------------------*/
 

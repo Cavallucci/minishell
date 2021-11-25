@@ -6,11 +6,27 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/24 14:12:44 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/25 15:16:49 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*ft_strcpy(char *dest, char *src)
+{
+	int	i;
+
+	i = 0;
+	if (!src)
+		return (NULL);
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = 0;
+	return (dest);
+}
 
 t_lst   *create_cell(char *cmd)
 {
@@ -38,40 +54,28 @@ void	add_cell_parsing(t_data *d, t_lst *new)
     }
 }
 
-t_lst   *add_cell_pos(t_lst *list, char *cmd, int pos)
-{ 
-	t_lst *prec;
-	t_lst *cur;
-	t_lst *cell;
-	int       i;
-
-	cur = list;
-	i = 0; 
-	cell = create_cell(cmd);
-	if (list == NULL)
-		return (cell);
-	while (i < pos)
-	{
-		i++;
-		prec = cur;
-		cur = cur->next;
-	} 
-	prec->next = cell;
-	cell->next = cur;
-	return (list);
-}   
-
 void    print_list(t_lst *list)
 {   
-	int       i;
+	int	i;
+	int	j;
 
 	i = 0;
+	j = 0;
 	while (list)
 	{
 		printf("-----------------------------------\n");
 		printf("| pipe = %d                        \n", i);
 		printf("| cmd = %s            \n", list->cmd);
-//		printf("| arg = %s			  \n", list->arg);
+	if (list->arg)
+	{
+		printf("| arg = ");
+		while (list->arg[j])
+		{
+			printf("%s -- ", list->arg[j]);
+			j++;
+		}
+		}
+		printf("\n");
 		printf("| path = %s			  \n", list->path);
 		printf("| input = %i		  \n", list->input);
 		printf("| output = %i		  \n", list->output);
