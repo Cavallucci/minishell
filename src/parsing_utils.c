@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/25 17:15:20 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/25 18:10:49 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_lst	*create_new_int(t_lst *cell, char what, int file)
 int	found_place_raft(char **split, int i)
 {
 	int	j;
-
+	
 	while (split[i])
 	{
 		j = 0;

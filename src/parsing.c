@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/25 17:45:02 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/25 18:35:50 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,6 @@ t_lst	*found_path(t_lst *cell, t_data *d)
 int	found_cmd(char **split, t_lst *cell)
 {
 	int	i;
-
 	i = 0;
 	while (split[i])
 	{
@@ -261,7 +260,7 @@ t_lst	*parsing(t_data *d)
 		{
 			split = ft_split_parsing(split_pipe[i]);
 			if (!check_chev(split))
-			{
+			{	
 				cell = init_cell();
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
 				cell = fill_in_out_file(split, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
