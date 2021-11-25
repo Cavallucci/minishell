@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/25 15:16:49 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/25 17:15:20 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,15 @@ void    print_list(t_lst *list)
 		printf("-----------------------------------\n");
 		printf("| pipe = %d                        \n", i);
 		printf("| cmd = %s            \n", list->cmd);
-	if (list->arg)
-	{
-		printf("| arg = ");
-		while (list->arg[j])
+		if (list->arg)
 		{
-			printf("%s -- ", list->arg[j]);
-			j++;
-		}
+			printf("| arg = ");
+			j = 0;
+			while (list->arg[j])
+			{
+				printf("%s -- ", list->arg[j]);
+				j++;
+			}
 		}
 		printf("\n");
 		printf("| path = %s			  \n", list->path);

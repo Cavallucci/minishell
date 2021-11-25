@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/25 15:16:45 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/25 17:45:02 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,10 +163,10 @@ t_lst	*fill_in_out_file(char **split, t_sep *sep, t_lst *cell)
 	place_raft = found_place_raft(split, 0);
 	while (place_raft != -1)
 	{
-		if (cell->input > 0)
-			close(cell->input);
-		if (cell->output > 0)
-			close(cell->output);
+	//	if (cell->input > 0)
+	//		close(cell->input);
+	//	if (cell->output > 0)
+	//		close(cell->output);
 		if (split[place_raft][0] == '<' && split[place_raft][1] != '<')
 			cell = create_new_int(cell, 'i', open(sep->infile, O_RDONLY));
 		else if (split[place_raft][0] == '>' && split[place_raft][1] != '>')
@@ -226,7 +226,7 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 		tmp = place_cmd;
 		while (split[place_cmd])
 			place_cmd++;
-		arg = malloc(sizeof(char**) * place_cmd);
+		arg = malloc(sizeof(char*) * (place_cmd + 1));
 		if (!arg)
 			return (NULL);
 		place_cmd = tmp - 1;
@@ -236,6 +236,7 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 			i++;
 			place_cmd++;
 		}
+		arg[i] = NULL;
 		i = 0;
 		cell = create_new_char(cell, NULL, arg, 'a');
 	}
@@ -268,8 +269,6 @@ t_lst	*parsing(t_data *d)
 				cell = fill_arg(split, cell);
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
-			printf("arg === %s\n", d->cmd_lst->arg[0]);
-
 			//detecter les guillemets && les args 
 			//free split_pipe
 				print_sep(sep, split);
