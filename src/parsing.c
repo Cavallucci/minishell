@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/26 14:37:49 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/26 16:00:15 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,8 +232,10 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 		if (!arg)
 			return (NULL);
 		place_cmd = tmp;
-		while (split[place_cmd] && !is_charset_arg(split[place_cmd][0]))
+		while (split[place_cmd] && split[place_cmd][0] != '|')
 		{
+			while (split[place_cmd][0] == '<' || split[place_cmd][0] == '>')
+				place_cmd++;
 			arg[i] = split[place_cmd];
 			i++;
 			place_cmd++;
@@ -268,13 +270,12 @@ t_lst	*parsing(t_data *d)
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
 				cell = fill_in_out_file(split, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
 			//	cell = found_path(cell, d);	//check path
-				cell = fill_arg(split, cell);
+				cell = fill_arg(split, cell); // remplir les arguments
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
-			//enlever les guillemets 
 			//enlever les chevrons	
 			//free split_pipe
-		//		print_sep(sep, split);
+			//print_sep(sep, split);
 			}
 			else
 				printf("free_split et split_pipe\n");
