@@ -6,11 +6,20 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/25 18:10:49 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/26 13:03:42 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_swap(char **a, char **b)
+{
+	char	*tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
 
 char	*ft_strcpy(char *dest, char *src)
 {
@@ -27,6 +36,21 @@ char	*ft_strcpy(char *dest, char *src)
 	dest[i] = 0;
 	return (dest);
 }
+
+int ft_strcmp_parsing(char *s1, char *s2)
+{
+    int i;
+
+    i = 0;
+    while (s1[i] && s2[i]) 
+    {
+        if (s1[i] != s2[i])
+            return (1);
+		i++;
+    }   
+    return (0);
+}
+
 
 t_lst   *create_cell(char *cmd)
 {

@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/25 18:35:50 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/26 13:12:13 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,11 +121,11 @@ int	check_chev(char **split)
 
 t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell)
 {
-	int	place_raft;
+	int		place_raft;
 
-	if (sep->simple_raft_left > 0 || sep->simple_raft_right > 0)
+	place_raft = found_place_raft(split, 0);
+	if (place_raft != -1)
 	{
-		place_raft = found_place_raft(split, 0);
 		if (place_raft != -1)
 		{
 			if (split[place_raft][0] == '<')
@@ -138,7 +138,10 @@ t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell)
 					cell = create_new_char(cell, split[place_raft - 1], NULL, 'c');
 				}
 				else
+				{
 					cell = create_new_char(cell, split[place_raft + 2], NULL, 'c');
+					ft_swap(&split[place_raft + 1], &split[place_raft + 2]);
+				}
 			}
 			else if (split[place_raft][0] == '>')
 			{
@@ -197,7 +200,7 @@ int	found_cmd(char **split, t_lst *cell)
 	i = 0;
 	while (split[i])
 	{
-		if (ft_strcmp(cell->cmd, split[i]))
+		if (ft_strcmp_parsing(cell->cmd, split[i]) != 1)
 			return (i);
 		i++;
 	}
@@ -228,7 +231,7 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 		arg = malloc(sizeof(char*) * (place_cmd + 1));
 		if (!arg)
 			return (NULL);
-		place_cmd = tmp - 1;
+		place_cmd = tmp;
 		while (split[place_cmd] && !is_charset_arg(split[place_cmd][0]))
 		{
 			arg[i] = split[place_cmd];
@@ -236,8 +239,8 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 			place_cmd++;
 		}
 		arg[i] = NULL;
-		i = 0;
 		cell = create_new_char(cell, NULL, arg, 'a');
+		//free arg ??
 	}
 	return (cell);
 }
@@ -268,9 +271,10 @@ t_lst	*parsing(t_data *d)
 				cell = fill_arg(split, cell);
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
-			//detecter les guillemets && les args 
+			//enlever les guillemets 
+			//deplacer dans le bon ordre les args
 			//free split_pipe
-				print_sep(sep, split);
+		//		print_sep(sep, split);
 			}
 			else
 				printf("free_split et split_pipe\n");
