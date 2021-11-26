@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/26 13:12:13 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/26 14:37:49 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,7 +272,7 @@ t_lst	*parsing(t_data *d)
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
 			//enlever les guillemets 
-			//deplacer dans le bon ordre les args
+			//enlever les chevrons	
 			//free split_pipe
 		//		print_sep(sep, split);
 			}

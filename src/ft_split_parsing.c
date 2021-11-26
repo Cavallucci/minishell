@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/12 16:49:36 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/26 14:51:52 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,10 @@ static char	*make_split_q(char *s, t_sp *sp)
 		check_quote(s[sp->line], sp);
 		if (s[sp->line] == ' ' && sp->s_quote == 0 && sp->d_quote == 0)
 			break ;
+		if (s[sp->line] == '"' && sp->s_quote == 0)
+			sp->line++;
+		if (s[sp->line] == '\'' && sp->d_quote == 0)
+			sp->line++;
 		sp->new[sp->j][sp->k] = s[sp->line];
 		sp->k++;
 		sp->line++;
