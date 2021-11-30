@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:50:42 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/30 14:34:28 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/30 14:51:18 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ int	main(int argc, char **argv, char **envp)
 		d->cmd_lst = parsing(d);
 		ft_pipe(d, d->cmd_lst, d->cmd_lst->input, 1);
 	}
-	ft_free_all(d);
+//	ft_free_all(d);
 	return (0);
 }
 

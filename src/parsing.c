@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/30 14:30:36 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/30 15:00:52 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,8 @@ t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell)
 			}
 			else if (split[place_raft][0] == '>')
 			{
-			/*	sep->outfile = split[place_raft + 1];
-				while (split[place_raft - 1][0] == '-')
+				sep->outfile = split[place_raft + 1];
+			/*	while (split[place_raft - 1][0] == '-')
 					place_raft -= 1;
 				cell = create_new_char(cell, split[place_raft - 1], NULL, 'c');
 		*/
@@ -174,7 +174,10 @@ t_lst	*fill_in_out_file(char **split, t_sep *sep, t_lst *cell)
 		if (split[place_raft][0] == '<' && split[place_raft][1] != '<')
 			cell = create_new_int(cell, 'i', open(sep->infile, O_RDONLY));
 		else if (split[place_raft][0] == '>' && split[place_raft][1] != '>')
+		{
+			printf("sep->outfile = %s\n", sep->outfile);
 			cell = create_new_int(cell, 'o', open(sep->outfile, O_CREAT | O_RDWR | O_TRUNC, 0644));
+		}
 		else if (split[place_raft][0] == '>' && split[place_raft][1] == '>')
 			cell = create_new_int(cell, 'i', open(sep->infile, O_CREAT | O_RDWR | O_APPEND, 0644));
 		else if (split[place_raft][0] == '<' && split[place_raft][1] == '<')
