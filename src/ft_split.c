@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:03:18 by mkralik           #+#    #+#             */
-/*   Updated: 2021/10/19 14:26:03 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/11/23 18:04:42 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,55 @@ char	**ft_split(const char *s, char c)
 	}
 	tab[index] = 0;
 	return (tab);
+}
+
+char	**ft_split_env(const char *s, char c)
+{
+	char	**tab;
+	int		index;
+	int		i;
+
+	if (!s)
+		return (NULL);
+	tab = malloc(sizeof(char *) * 3);
+	if (!tab)
+		return (NULL);
+	index = 0;
+	tab[index] = malloc(sizeof(char) * (sizeof_word(s, c) + 1));
+	if (!tab[index])
+		return (free_tab(tab, index));
+	i = 0;
+	while (*s && (*s != c))
+		tab[index][i++] = *s++;
+	tab[index][i] = 0;
+	index++;
+	tab[index] = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!tab[index])
+		return (free_tab(tab, index));
+	i = 0;
+	s++;
+	while (*s)
+		tab[index][i++] = *s++;
+	tab[index][i] = 0;
+	index++;
+	tab[index] = 0;
+	return (tab);
+}
+
+char	*ft_strdup(const char *s1)
+{
+	char	*dst;
+	size_t	i;
+
+	dst = malloc(sizeof(char) * (ft_strlen(s1) + 1));
+	if (!dst)
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		dst[i] = s1[i];
+		i++;
+	}
+	dst[i] = 0;
+	return (dst);
 }

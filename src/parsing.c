@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/26 16:00:15 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/30 14:30:36 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ t_lst	*init_cell()
 	cell->path = NULL;
 	cell->input = 0;
 	cell->output = 0;
+	cell->builtin = 0;
 	return (cell);
 }
 
@@ -188,12 +189,6 @@ t_lst	*fill_in_out_file(char **split, t_sep *sep, t_lst *cell)
 	return (cell);
 }
 
-t_lst	*found_path(t_lst *cell, t_data *d)
-{
-	printf("env = %s\n", d->env->value);
-	return (cell);
-}
-
 int	found_cmd(char **split, t_lst *cell)
 {
 	int	i;
@@ -205,13 +200,6 @@ int	found_cmd(char **split, t_lst *cell)
 		i++;
 	}
 	return (-1);
-}
-
-int	is_charset_arg(char c)
-{
-	if (c == '<' || c == '>' || c == '|')
-		return (1);
-	return (0);
 }
 
 t_lst	*fill_arg(char **split, t_lst *cell)
@@ -247,6 +235,75 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 	return (cell);
 }
 
+t_lst	*fill_builtin(t_lst *cell)
+{
+	if (!ft_strcmp_parsing(cell->cmd, "echo") || !ft_strcmp_parsing(cell->cmd, "cd") || !ft_strcmp_parsing(cell->cmd, "pwd") || !ft_strcmp_parsing(cell->cmd, "export") || !ft_strcmp_parsing(cell->cmd, "unset") || !ft_strcmp_parsing(cell->cmd, "env") || !ft_strcmp_parsing(cell->cmd, "exit"))
+		cell = create_new_int(cell, 'b', 1);
+	else
+		cell = create_new_int(cell, 'b', 0);
+	return (cell);
+}
+
+int	check_if_path(char *argv)
+{
+	int	i;
+
+	i = 0;
+	while (argv[i])
+	{
+		if (argv[i] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+t_lst	*ft_free_double(char **path, char *cmd, t_lst *cell, t_data *d)
+{
+	int	i;
+
+	i = 0;
+	while (path[i])
+	{
+		free(path[i]);
+		i++;
+	}
+	free(path);
+	if (cmd)
+		cell = create_new_char(cell, cmd, NULL, 'p');
+	else
+		cell = create_new_char(cell, d->cmd_lst->cmd, NULL, 'p');
+	return (cell);
+}
+
+t_lst	*found_path(t_lst *cell, t_data *d)
+{
+	char	**path;
+	int		i;
+	char	*c;
+	char	*cmd;
+
+	while (d->env && ft_strcmp_parsing(d->env->key, "PATH"))
+		d->env = d->env->next;
+	path = ft_split(d->env->value, ':');
+	if (!path)
+		return (NULL);
+	i = 0;
+	while (path[i])
+	{
+		c = ft_strjoin(path[i], "/");	
+		cmd = ft_strjoin(c, cell->cmd);
+		free(c);
+		if (access(cmd, F_OK) != -1)
+			return (ft_free_double(path, cmd, cell, d));
+		free(cmd);
+		i++;
+	}
+	if (check_if_path(d->cmd_lst->cmd))
+		return (ft_free_double(path, NULL, cell, d));
+	return (NULL);
+}
+
 t_lst	*parsing(t_data *d)
 {
 	t_sep	sep[1];
@@ -254,7 +311,7 @@ t_lst	*parsing(t_data *d)
 	char	**split;
 	int		i;
 	t_lst	*cell;
-
+	
 	i = 0;
 	init_sep(sep);
 	fill_sep(d, sep);
@@ -269,11 +326,11 @@ t_lst	*parsing(t_data *d)
 				cell = init_cell();
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
 				cell = fill_in_out_file(split, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
-			//	cell = found_path(cell, d);	//check path
+				cell = found_path(cell, d);	//check path
 				cell = fill_arg(split, cell); // remplir les arguments
+				cell = fill_builtin(cell);
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
-			//enlever les chevrons	
 			//free split_pipe
 			//print_sep(sep, split);
 			}
@@ -281,7 +338,7 @@ t_lst	*parsing(t_data *d)
 				printf("free_split et split_pipe\n");
 			i++;
 		}
-		print_list(d->cmd_lst);
+	//	print_list(d->cmd_lst);
 	}
-	return (NULL);
+	return (d->cmd_lst);
 }

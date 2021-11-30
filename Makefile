@@ -1,20 +1,8 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/10/21 14:52:01 by lcavallu          #+#    #+#              #
-#    Updated: 2021/11/19 14:14:14 by lcavallu         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME	= minishell
 
 CC		= gcc
 
-FLAGS	= -Wall -Wextra -Werror
+FLAGS	= -Wall -Wextra -Werror -g
 
 INCLUDE	= include
 
@@ -24,11 +12,22 @@ OBJ_PATH	= obj
 
 SOURCES =	mini.c \
 			parsing.c \
+			parsing_utils.c \
+			ft_split_parsing.c \
 			ft_split.c \
 			lst.c \
 			utils.c \
-			parsing_utils.c \
-			ft_split_parsing.c
+			export.c \
+			env.c \
+			pwd.c \
+			echo.c \
+			cd.c \
+			unset.c \
+			exit.c \
+			pipex.c \
+			error.c \
+			exec.c \
+			free.c
 
 SRC	= $(addprefix $(SRC_PATH)/,$(SOURCES))
 
@@ -63,4 +62,3 @@ fclean: clean
 re: fclean all
 
 .PHONY:	all clean fclean re
-

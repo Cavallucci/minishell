@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/26 13:03:42 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/11/30 14:10:06 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,23 @@ char	*ft_strcpy(char *dest, char *src)
 	}
 	dest[i] = 0;
 	return (dest);
+}
+
+int	ft_strncmp_parsing(char *s1, char *s2, int n)
+{
+	int		i;
+	int		d;
+
+	i = 0;
+	while (s1[i] && s1[i] == s2[i] && i + 1 < n)
+		i++;
+	d = (unsigned char)s1[i] - (unsigned char)s2[i];
+	if (!d || !n)
+		return (0);
+	else if (d < 0)
+		return (-1);
+	else
+		return (1);
 }
 
 int ft_strcmp_parsing(char *s1, char *s2)
@@ -104,6 +121,7 @@ void    print_list(t_lst *list)
 		printf("| path = %s			  \n", list->path);
 		printf("| input = %i		  \n", list->input);
 		printf("| output = %i		  \n", list->output);
+		printf("| builtin = %i			\n", list->builtin);
 		printf("-----------------------------------\n");
 		list = list->next;
 		i++;
@@ -127,6 +145,8 @@ t_lst	*create_new_int(t_lst *cell, char what, int file)
 		cell->input = file; //input
 	if (what == 'o')
 		cell->output = file; // output
+	if (what == 'b')
+		cell->builtin = file; // builtin
 	return (cell);
 }
 
