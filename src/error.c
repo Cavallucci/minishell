@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 22:37:57 by paulguign         #+#    #+#             */
-/*   Updated: 2021/11/02 14:26:24 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/03 15:24:17 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	error_catch(int test, char *file, char *msg)
 	{
 		if (file)
 		{
-			tmp = ft_strjoin("Pipex: ", file);
+			tmp = ft_strjoin("bash: ", file);
 			str = ft_strjoin(tmp, ": ");
 			free(tmp);
 			tmp = ft_strjoin(str, msg);

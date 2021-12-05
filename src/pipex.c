@@ -6,13 +6,13 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 22:54:07 by paulguign         #+#    #+#             */
-/*   Updated: 2021/11/30 14:28:25 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/03 17:39:47 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	error_cmd(char *arg)
+void	error_cmd(char *arg)
 {
 	if (!arg)
 	{
@@ -45,18 +45,9 @@ static int	ft_pipe_exec(t_data *data, t_lst *lst, int *fd)
 	}
 	close(fd[0]);
 	close(fd[1]);
-	if (!lst->path)
-	{
-		error_cmd(lst->cmd);
-		//ft_free_split(split);
-		//exit (ft_free_data(data, 127));
-		g_exit_status = 127;
-		return(g_exit_status);
-	}
 	ch_env = get_env_to_char(data->env);
 	ft_execute(data, 0, lst, ch_env);
 	free_dble_str(ch_env);
-	// execve(lst->path, lst->arg, ch_env);
 	exit (0);
 }
 
@@ -68,7 +59,7 @@ int	ft_pipe(t_data *data, t_lst *lst, int fd_in, int step)
 	int	ret;
 
 	status = 0;
-	if (lst && lst->builtin && !lst->next)
+	if (lst && lst->builtin && !lst->next && (!ft_strcmp(lst->cmd, "exit") || !ft_strcmp(lst->cmd, "export")))
 	{
 		ret = exec_builtin(lst, data);
 		return (ret);
@@ -85,17 +76,23 @@ int	ft_pipe(t_data *data, t_lst *lst, int fd_in, int step)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		if (lst->input == -2)
+		if (fd_in == -1 && lst->input == 0)
+			fd[0] = open("/dev/stdin", O_RDONLY);
+		else if (lst->input == 0)
 			fd[0] = fd_in;
 		else
 			fd[0] = lst->input;
-		if (lst->output != -1)
+		if (lst->output == 0 && !lst->next)
+		{
+			close(fd[1]);
+			fd[1] = open("/dev/stdout", O_WRONLY);
+		}
+		else if (lst->output != 0)// && lst->output != 0)
 		{
 			close(fd[1]);
 			fd[1] = lst->output;
 		}
 		ft_pipe_exec(data, lst, fd);
-		//ft_redirection(data, fd, fd_in, step);
 	}
 	close(fd[1]);
 	if (lst->next)
@@ -104,6 +101,5 @@ int	ft_pipe(t_data *data, t_lst *lst, int fd_in, int step)
 	waitpid(pid, &status, 0);
 	if (!lst->next)
 		ret = WEXITSTATUS(status);
-		//ret = ft_free_data(data, WEXITSTATUS(status));
 	return (ret);
 }

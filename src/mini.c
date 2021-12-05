@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:50:42 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/30 14:51:18 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/02 15:35:44 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,14 +147,18 @@ int	main(int argc, char **argv, char **envp)
 	d = init_data(envp);
 	if (!d)
 		return(1);
-//	ft_pipe(d, d->cmd_lst, d->cmd_lst->input, 1);
 	d->prompt = design_prompt(d);
 	while (1)
 	{
-		//printf("%s\n", d->prompt);
 		d->line = readline(d->prompt);
 		d->cmd_lst = parsing(d);
-		ft_pipe(d, d->cmd_lst, d->cmd_lst->input, 1);
+		if (d->cmd_lst->cmd)
+		{
+			ft_pipe(d, d->cmd_lst, -1, 1);
+			add_history(d->line);
+		}
+		if (d->cmd_lst)
+			free_cmd_lst(d, &d->cmd_lst);
 	}
 //	ft_free_all(d);
 	return (0);

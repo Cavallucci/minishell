@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/30 14:10:06 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/04 18:01:25 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,13 @@ int ft_strcmp_parsing(char *s1, char *s2)
     int i;
 
     i = 0;
-    while (s1[i] && s2[i]) 
+    printf("s1 = %s\n", s1);
+	while (s1[i] && s2[i])
     {
         if (s1[i] != s2[i])
             return (1);
 		i++;
-    }   
+    }
     return (0);
 }
 
@@ -96,7 +97,7 @@ void	add_cell_parsing(t_data *d, t_lst *new)
 }
 
 void    print_list(t_lst *list)
-{   
+{
 	int	i;
 	int	j;
 
@@ -131,7 +132,7 @@ void    print_list(t_lst *list)
 t_lst	*create_new_char(t_lst *cell, char *split, char **arg, char what)
 {
 	if (what == 'c')	//commande
-		cell->cmd = split;	
+		cell->cmd = split;
 	if (what == 'p')	//path
 		cell->path = split;
 	if (what == 'a') // arguments
@@ -153,9 +154,10 @@ t_lst	*create_new_int(t_lst *cell, char what, int file)
 int	found_place_raft(char **split, int i)
 {
 	int	j;
-	
+
 	while (split[i])
 	{
+		printf("split = %s\n", split[i]);
 		j = 0;
 		while (split[i][j])
 		{

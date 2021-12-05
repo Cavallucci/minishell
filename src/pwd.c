@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 12:11:52 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/23 13:10:55 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/03 16:53:12 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	exec_pwd(t_lst *cmd_lst, t_data *data)
 
 	(void) data;
 	(void) cmd_lst;
-	pwd = getcwd(NULL, 0);
+	pwd = ft_getcwd();
 	if (!pwd)
 	{
 		ft_putstr_fd("pwd: error retrieving current directory: ", 2);

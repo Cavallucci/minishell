@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/26 15:36:10 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/04 17:44:22 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ static int   count_charset(const char *s)
 				while (s[i] && s[i] != '"')
 					i++;
 				i++;
+				if (s[i] && s[i] != ' ')
+					words--;
 			}
 			else if (s[i] == '\'' && d_quote == 0)
 			{
@@ -76,6 +78,8 @@ static int   count_charset(const char *s)
 				while (s[i] && s[i] != '\'')
 					i++;
 				i++;
+				if (s[i] && s[i] != ' ')
+					words--;
 			}
 			else
 				while (s[i] && !is_charset(s[i]) && s[i] != '"' && s[i] != '\'')
@@ -173,9 +177,12 @@ static char	*make_split_q(char *s, t_sp *sp)
 			sp->line++;
 		else if (s[sp->line] == '\'' && sp->d_quote == 0)
 			sp->line++;
-		sp->new[sp->j][sp->k] = s[sp->line];
-		sp->k++;
-		sp->line++;
+		if (s[sp->line] != '"')
+		{
+			sp->new[sp->j][sp->k] = s[sp->line];
+			sp->k++;
+			sp->line++;
+		}
 	}
 	sp->new[sp->j][sp->k] = s[sp->line];
 	sp->k++;

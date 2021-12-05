@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 14:38:51 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/28 16:35:20 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/01 16:33:57 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ void	remove_from_list(t_lst *cmd_lst, t_data *data)
 	(void)data;
 	if (!cmd_lst)
 		return ;
-	free_str(&cmd_lst->cmd);
-	if (cmd_lst->arg)
-		free_dble_str(cmd_lst->arg);
-	free_str(&cmd_lst->path);
+	// free_str(&cmd_lst->cmd);
+	// if (cmd_lst->arg)
+		// free_dble_str(cmd_lst->arg);
+	// free_str(&cmd_lst->path);
 	free(cmd_lst);
 	cmd_lst = NULL;
 }
@@ -109,4 +109,5 @@ void	ft_free_all(t_data *data)
 		free_env(data->export);
 	if (data)
 		free(data);
+	rl_clear_history();
 }

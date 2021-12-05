@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/30 13:48:11 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/03 16:52:56 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ char	*ft_strjoin(char *s1, char *s2);
 int		ft_atoi(const char *str);
 char	*ft_strdup(const char *s1);
 void	ft_putstr_fd(char *s, int fd);
+void	error_cmd(char *arg);
 
 /*---------------------split.c--------------------------*/
 
@@ -141,6 +142,7 @@ int		size_env(t_env *env);
 int		exec_echo(t_lst *cmd_lst, t_data *data);
 
 //cd
+char	*ft_getcwd(void);
 int		exec_cd(t_lst *cmd_lst, t_data *data);
 
 //unset

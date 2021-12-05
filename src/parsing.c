@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/11/30 15:00:52 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/04 18:00:17 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	fill_sep(t_data *d, t_sep *sep)
 		if (d->line[i] == '<' && d->line[i + 1] == '<')
 			sep->double_raft_left++;
 		if (d->line[i] == '>' && d->line[i + 1] == '>')
-			sep->double_raft_right++;	
+			sep->double_raft_right++;
 		i++;
 	}
 }
@@ -125,34 +125,32 @@ t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell)
 	int		place_raft;
 
 	place_raft = found_place_raft(split, 0);
+	printf("place raft = %i\n", place_raft);
 	if (place_raft != -1)
 	{
-		if (place_raft != -1)
+		if (split[place_raft][0] == '<')
 		{
-			if (split[place_raft][0] == '<')
+			sep->infile = split[place_raft + 1];
+			if (place_raft != 0)
 			{
-				sep->infile = split[place_raft + 1];
-				if (place_raft != 0)
-				{
-					while (split[place_raft - 1][0] == '-')
-						place_raft -= 1;
-					cell = create_new_char(cell, split[place_raft - 1], NULL, 'c');
-				}
-				else
-				{
-					cell = create_new_char(cell, split[place_raft + 2], NULL, 'c');
-					ft_swap(&split[place_raft + 1], &split[place_raft + 2]);
-				}
-			}
-			else if (split[place_raft][0] == '>')
-			{
-				sep->outfile = split[place_raft + 1];
-			/*	while (split[place_raft - 1][0] == '-')
+				while (split[place_raft - 1][0] == '-')
 					place_raft -= 1;
 				cell = create_new_char(cell, split[place_raft - 1], NULL, 'c');
-		*/
-				cell = create_new_char(cell, split[0], NULL, 'c');
 			}
+			else
+			{
+				cell = create_new_char(cell, split[place_raft + 2], NULL, 'c');
+				ft_swap(&split[place_raft + 1], &split[place_raft + 2]);
+			}
+		}
+		else if (split[place_raft][0] == '>')
+		{
+			sep->outfile = split[place_raft + 1];
+		/*	while (split[place_raft - 1][0] == '-')
+				place_raft -= 1;
+			cell = create_new_char(cell, split[place_raft - 1], NULL, 'c');
+		*/
+			cell = create_new_char(cell, split[0], NULL, 'c');
 		}
 	}
 	else
@@ -174,10 +172,7 @@ t_lst	*fill_in_out_file(char **split, t_sep *sep, t_lst *cell)
 		if (split[place_raft][0] == '<' && split[place_raft][1] != '<')
 			cell = create_new_int(cell, 'i', open(sep->infile, O_RDONLY));
 		else if (split[place_raft][0] == '>' && split[place_raft][1] != '>')
-		{
-			printf("sep->outfile = %s\n", sep->outfile);
 			cell = create_new_int(cell, 'o', open(sep->outfile, O_CREAT | O_RDWR | O_TRUNC, 0644));
-		}
 		else if (split[place_raft][0] == '>' && split[place_raft][1] == '>')
 			cell = create_new_int(cell, 'i', open(sep->infile, O_CREAT | O_RDWR | O_APPEND, 0644));
 		else if (split[place_raft][0] == '<' && split[place_raft][1] == '<')
@@ -195,6 +190,7 @@ t_lst	*fill_in_out_file(char **split, t_sep *sep, t_lst *cell)
 int	found_cmd(char **split, t_lst *cell)
 {
 	int	i;
+
 	i = 0;
 	while (split[i])
 	{
@@ -211,7 +207,7 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 	char	**arg;
 	int		i;
 	int		tmp;
-	
+
 	i = 0;
 	place_cmd = found_cmd(split, cell);
 	if (place_cmd != -1)
@@ -225,8 +221,8 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 		place_cmd = tmp;
 		while (split[place_cmd] && split[place_cmd][0] != '|')
 		{
-			while (split[place_cmd][0] == '<' || split[place_cmd][0] == '>')
-				place_cmd++;
+			if (split[place_cmd][0] == '<' || split[place_cmd][0] == '>')
+				break;
 			arg[i] = split[place_cmd];
 			i++;
 			place_cmd++;
@@ -240,6 +236,7 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 
 t_lst	*fill_builtin(t_lst *cell)
 {
+
 	if (!ft_strcmp_parsing(cell->cmd, "echo") || !ft_strcmp_parsing(cell->cmd, "cd") || !ft_strcmp_parsing(cell->cmd, "pwd") || !ft_strcmp_parsing(cell->cmd, "export") || !ft_strcmp_parsing(cell->cmd, "unset") || !ft_strcmp_parsing(cell->cmd, "env") || !ft_strcmp_parsing(cell->cmd, "exit"))
 		cell = create_new_int(cell, 'b', 1);
 	else
@@ -261,7 +258,7 @@ int	check_if_path(char *argv)
 	return (0);
 }
 
-t_lst	*ft_free_double(char **path, char *cmd, t_lst *cell, t_data *d)
+t_lst	*ft_free_double(char **path, char *cmd, t_lst *cell)
 {
 	int	i;
 
@@ -275,36 +272,39 @@ t_lst	*ft_free_double(char **path, char *cmd, t_lst *cell, t_data *d)
 	if (cmd)
 		cell = create_new_char(cell, cmd, NULL, 'p');
 	else
-		cell = create_new_char(cell, d->cmd_lst->cmd, NULL, 'p');
+		cell = create_new_char(cell, cell->cmd, NULL, 'p');
 	return (cell);
 }
 
 t_lst	*found_path(t_lst *cell, t_data *d)
 {
 	char	**path;
+	t_env	*tmp;
 	int		i;
 	char	*c;
 	char	*cmd;
 
-	while (d->env && ft_strcmp_parsing(d->env->key, "PATH"))
-		d->env = d->env->next;
-	path = ft_split(d->env->value, ':');
+	tmp = d->env;
+	while (tmp && ft_strcmp_parsing(tmp->key, "PATH"))
+		tmp = tmp->next;
+	path = ft_split(tmp->value, ':');
 	if (!path)
 		return (NULL);
 	i = 0;
+	if (check_if_path(cell->cmd))
+		return (ft_free_double(path, NULL, cell));
 	while (path[i])
 	{
-		c = ft_strjoin(path[i], "/");	
+		c = ft_strjoin(path[i], "/");
 		cmd = ft_strjoin(c, cell->cmd);
 		free(c);
 		if (access(cmd, F_OK) != -1)
-			return (ft_free_double(path, cmd, cell, d));
+			return (ft_free_double(path, cmd, cell));
 		free(cmd);
 		i++;
 	}
-	if (check_if_path(d->cmd_lst->cmd))
-		return (ft_free_double(path, NULL, cell, d));
-	return (NULL);
+	cell = create_new_char(cell, NULL, NULL, 'p');
+	return (cell);
 }
 
 t_lst	*parsing(t_data *d)
@@ -314,26 +314,36 @@ t_lst	*parsing(t_data *d)
 	char	**split;
 	int		i;
 	t_lst	*cell;
-	
+
 	i = 0;
 	init_sep(sep);
 	fill_sep(d, sep);
 	if (!check_sep(sep))
 	{
 		split_pipe = ft_split(d->line, '|');
+		if (!split_pipe[i])
+		{
+			cell = init_cell();
+			cell->next = NULL;
+			add_cell_parsing(d, cell);
+		}
 		while (split_pipe[i])
 		{
 			split = ft_split_parsing(split_pipe[i]);
 			if (!check_chev(split))
-			{	
+			{
+				
 				cell = init_cell();
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
+				
 				cell = fill_in_out_file(split, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
-				cell = found_path(cell, d);	//check path
-				cell = fill_arg(split, cell); // remplir les arguments
 				cell = fill_builtin(cell);
+				if (cell->builtin == 0)
+					cell = found_path(cell, d);
+				cell = fill_arg(split, cell); // remplir les arguments
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
+				// printf("%s\n", d->cmd_lst->cmd);
 			//free split_pipe
 			//print_sep(sep, split);
 			}
@@ -341,7 +351,7 @@ t_lst	*parsing(t_data *d)
 				printf("free_split et split_pipe\n");
 			i++;
 		}
-	//	print_list(d->cmd_lst);
+	// print_list(d->cmd_lst);
 	}
 	return (d->cmd_lst);
 }
