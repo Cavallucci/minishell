@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/04 17:44:22 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/06 15:16:52 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,46 +82,16 @@ static int   count_charset(const char *s)
 					words--;
 			}
 			else
+			{
 				while (s[i] && !is_charset(s[i]) && s[i] != '"' && s[i] != '\'')
 					i++;
+				if (s[i] && s[i] != ' ')
+					words--;
+			}
 			words++;
         }
     }
 	return (words);
-}
-
-static size_t   count_char(const char *s, char c)
-{
-	size_t  i;
-
-	i = 0;
-	if (c == 'w')
-		while (s[i] && !is_charset(s[i]))
-			i++;
-	else if (c == 'q')
-		while (s[i] && s[i] != '"')
-			i++;
-	else if (c == 'u')
-		while (s[i] && s[i] != '\'')
-			i++;
-	else if (c == 'c')
-		while (s[i] && (s[i] == '<' || s[i] == '>'))
-			i++;
-	return (i);
-}
-
-static char *ft_free(char **dst)
-{
-    int i;
-
-    i = 0;
-    while (dst[i])
-    {
-        free(dst[i]);
-        i++;
-    }
-    free(dst);
-    return (NULL);
 }
 
 void    check_quote(char str, t_sp *sp)
@@ -142,9 +112,91 @@ void    check_quote(char str, t_sp *sp)
     }
 }
 
+static size_t   count_char(const char *s, char c, t_sp *sp)
+{
+	size_t  i;
+	int		count;
+
+	i = 0;
+	count = 0;
+	if (c == 'w')
+	{
+		while (s[i])
+		{
+			check_quote(s[i], sp);
+			while (s[i] == ' ')
+				i++;
+			if (s[i] == ' ' && sp->s_quote == 0 && sp->d_quote == 0)
+				break ;
+			if (s[i] == '"' && sp->s_quote == 0)
+				i++;
+			else if (s[sp->line] == '\'' && sp->d_quote == 0)
+				i++;
+			i++;
+			count++;
+		/*	if (s[i] == '"' && s_quote == 0)
+			{
+				d_quote = 1;
+				i++;
+				while (s[i] && s[i] != '"')
+				{
+					count++;
+					i++;
+				}
+				i++;
+			}
+			else if (s[i] == '\'' && d_quote == 0)
+			{
+				s_quote = 1;
+				i++;
+				while (s[i] && s[i] != '\'')
+				{
+					count++;
+					i++;
+				}
+				i++;
+			}
+			else
+			{
+				while (s[i] && !is_charset(s[i]) && s[i] != '"' && s[i] != '\'')
+				{
+					count++;
+					i++;
+				}
+				while (s[i] == ' ')
+					i++;
+			}*/
+		}
+	}
+	else if (c == 'c')
+		while (s[i] && (s[i] == '<' || s[i] == '>'))
+		{
+			count++;
+			i++;
+		}
+	sp->s_quote = 0;
+	sp->d_quote = 0;
+	printf("count = %i\n", count);
+	return (count);
+}
+
+static char *ft_free(char **dst)
+{
+    int i;
+
+    i = 0;
+    while (dst[i])
+    {
+        free(dst[i]);
+        i++;
+    }
+    free(dst);
+    return (NULL);
+}
+
 static char	*make_split_char(char *s, t_sp *sp)
 {
-	sp->new[sp->j] = (char *)malloc(sizeof(char) * (count_char(s, 'w') + 1));
+	sp->new[sp->j] = (char *)malloc(sizeof(char) * (count_char(s, 'w', sp) + 1));
 	if (!sp->new[sp->j])
 		return (ft_free(sp->new));
 	sp->k = 0;
@@ -153,14 +205,21 @@ static char	*make_split_char(char *s, t_sp *sp)
 		check_quote(s[sp->line], sp);
         if (is_charset(s[sp->line]) && sp->s_quote == 0 && sp->d_quote == 0)
             break ;
+		if (s[sp->line] == '"' && sp->s_quote == 0)
+			sp->line++;
+		else if (s[sp->line] == '\'' && sp->d_quote == 0)
+			sp->line++;
 		sp->new[sp->j][sp->k] = s[sp->line];
 		sp->k++;
 		sp->line++;
 	}
+	sp->new[sp->j][sp->k] = s[sp->line];
+	sp->k++;
+	sp->line++;
 	sp->new[sp->j][sp->k] = 0;
 	return (sp->new[sp->j]);
 }
-
+/*
 static char	*make_split_q(char *s, t_sp *sp)
 {
 //	sp->d_quote = 1;
@@ -177,12 +236,9 @@ static char	*make_split_q(char *s, t_sp *sp)
 			sp->line++;
 		else if (s[sp->line] == '\'' && sp->d_quote == 0)
 			sp->line++;
-		if (s[sp->line] != '"')
-		{
-			sp->new[sp->j][sp->k] = s[sp->line];
-			sp->k++;
-			sp->line++;
-		}
+		sp->new[sp->j][sp->k] = s[sp->line];
+		sp->k++;
+		sp->line++;
 	}
 	sp->new[sp->j][sp->k] = s[sp->line];
 	sp->k++;
@@ -217,10 +273,10 @@ static char	*make_split_u(char *s, t_sp *sp)
 	sp->new[sp->j][sp->k] = 0;
 	return (sp->new[sp->j]);
 }
-
+*/
 static char	*make_split_chev(char *s, t_sp *sp)
 {
-	sp->new[sp->j] = (char *)malloc(sizeof(char) * (count_char(s, 'c') + 1));
+	sp->new[sp->j] = (char *)malloc(sizeof(char) * (count_char(s, 'c', sp) + 1));
 	if (!sp->new[sp->j])
 		return (ft_free(sp->new));
 	sp->k = 0;
@@ -252,23 +308,16 @@ char	**ft_split_parsing(char *s)
 		if (is_charset(s[sp->line]))
 		{
 			if (s[sp->line] == '<' || s[sp->line] == '>')
-				make_split_chev(s, sp);
+					make_split_chev(s, sp);
 			else
+			{
 				while (s[sp->line] == ' ')
-				{
 					sp->line++;
-					sp->j--;
-				}
+				sp->j--;
+			}
 		}
 		else
-		{
-			if (s[sp->line] == '"')
-				make_split_q(s, sp);
-			else if (s[sp->line] == '\'')
-				make_split_u(s, sp);
-			else
-				make_split_char(s, sp);
-		}
+			make_split_char(s, sp);
 	}
 	sp->new[sp->j] = 0;
 	return (sp->new);

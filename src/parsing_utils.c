@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/04 18:01:25 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/06 14:33:59 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int ft_strcmp_parsing(char *s1, char *s2)
     int i;
 
     i = 0;
-    printf("s1 = %s\n", s1);
 	while (s1[i] && s2[i])
     {
         if (s1[i] != s2[i])
@@ -114,7 +113,7 @@ void    print_list(t_lst *list)
 			j = 0;
 			while (list->arg[j])
 			{
-				printf("%s -- ", list->arg[j]);
+				printf("%s--", list->arg[j]);
 				j++;
 			}
 		}
@@ -157,7 +156,6 @@ int	found_place_raft(char **split, int i)
 
 	while (split[i])
 	{
-		printf("split = %s\n", split[i]);
 		j = 0;
 		while (split[i][j])
 		{

@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/04 18:00:17 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/06 14:21:36 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,6 @@ t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell)
 	int		place_raft;
 
 	place_raft = found_place_raft(split, 0);
-	printf("place raft = %i\n", place_raft);
 	if (place_raft != -1)
 	{
 		if (split[place_raft][0] == '<')
@@ -331,8 +330,7 @@ t_lst	*parsing(t_data *d)
 		{
 			split = ft_split_parsing(split_pipe[i]);
 			if (!check_chev(split))
-			{
-				
+			{	
 				cell = init_cell();
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
 				
@@ -345,13 +343,13 @@ t_lst	*parsing(t_data *d)
 				add_cell_parsing(d, cell);
 				// printf("%s\n", d->cmd_lst->cmd);
 			//free split_pipe
-			//print_sep(sep, split);
+		//	print_sep(sep, split);
 			}
 			else
 				printf("free_split et split_pipe\n");
 			i++;
 		}
-	// print_list(d->cmd_lst);
+	 print_list(d->cmd_lst);
 	}
 	return (d->cmd_lst);
 }
