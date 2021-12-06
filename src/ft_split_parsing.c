@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/06 15:16:52 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/06 18:21:11 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,11 +117,11 @@ static size_t   count_char(const char *s, char c, t_sp *sp)
 	size_t  i;
 	int		count;
 
-	i = 0;
+	i = sp->line;
 	count = 0;
 	if (c == 'w')
 	{
-		while (s[i])
+		while (s[i] && !is_charset(s[i]))
 		{
 			check_quote(s[i], sp);
 			while (s[i] == ' ')
@@ -176,7 +176,6 @@ static size_t   count_char(const char *s, char c, t_sp *sp)
 		}
 	sp->s_quote = 0;
 	sp->d_quote = 0;
-	printf("count = %i\n", count);
 	return (count);
 }
 
@@ -204,7 +203,7 @@ static char	*make_split_char(char *s, t_sp *sp)
 	{
 		check_quote(s[sp->line], sp);
         if (is_charset(s[sp->line]) && sp->s_quote == 0 && sp->d_quote == 0)
-            break ;
+			break;
 		if (s[sp->line] == '"' && sp->s_quote == 0)
 			sp->line++;
 		else if (s[sp->line] == '\'' && sp->d_quote == 0)
@@ -213,9 +212,9 @@ static char	*make_split_char(char *s, t_sp *sp)
 		sp->k++;
 		sp->line++;
 	}
-	sp->new[sp->j][sp->k] = s[sp->line];
-	sp->k++;
-	sp->line++;
+	//sp->new[sp->j][sp->k] = s[sp->line];
+	//sp->k++;
+	//sp->line++;
 	sp->new[sp->j][sp->k] = 0;
 	return (sp->new[sp->j]);
 }

@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/06 14:21:36 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/06 18:23:19 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -349,7 +349,7 @@ t_lst	*parsing(t_data *d)
 				printf("free_split et split_pipe\n");
 			i++;
 		}
-	 print_list(d->cmd_lst);
+	// print_list(d->cmd_lst);
 	}
 	return (d->cmd_lst);
 }
