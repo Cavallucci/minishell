@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/06 18:23:19 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/07 15:25:10 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,7 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 t_lst	*fill_builtin(t_lst *cell)
 {
 
-	if (!ft_strcmp_parsing(cell->cmd, "echo") || !ft_strcmp_parsing(cell->cmd, "cd") || !ft_strcmp_parsing(cell->cmd, "pwd") || !ft_strcmp_parsing(cell->cmd, "export") || !ft_strcmp_parsing(cell->cmd, "unset") || !ft_strcmp_parsing(cell->cmd, "env") || !ft_strcmp_parsing(cell->cmd, "exit"))
+	if (cmp_str(cell->cmd, "echo") || cmp_str(cell->cmd, "cd") || cmp_str(cell->cmd, "pwd") || cmp_str(cell->cmd, "export") || cmp_str(cell->cmd, "unset") || cmp_str(cell->cmd, "env") || cmp_str(cell->cmd, "exit"))
 		cell = create_new_int(cell, 'b', 1);
 	else
 		cell = create_new_int(cell, 'b', 0);
@@ -328,12 +328,12 @@ t_lst	*parsing(t_data *d)
 		}
 		while (split_pipe[i])
 		{
-			split = ft_split_parsing(split_pipe[i]);
+			split = ft_split_parsing(split_pipe[i], d);
 			if (!check_chev(split))
-			{	
+			{
 				cell = init_cell();
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
-				
+
 				cell = fill_in_out_file(split, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
 				cell = fill_builtin(cell);
 				if (cell->builtin == 0)
@@ -343,13 +343,13 @@ t_lst	*parsing(t_data *d)
 				add_cell_parsing(d, cell);
 				// printf("%s\n", d->cmd_lst->cmd);
 			//free split_pipe
-		//	print_sep(sep, split);
+	//		print_sep(sep, split);
 			}
 			else
 				printf("free_split et split_pipe\n");
 			i++;
 		}
-	// print_list(d->cmd_lst);
+//	print_list(d->cmd_lst);
 	}
 	return (d->cmd_lst);
 }

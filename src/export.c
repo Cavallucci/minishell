@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 14:51:48 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/03 17:34:40 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/05 19:35:20 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	change_cell_env(char *key, char *new_value, t_env *env)
 	if (!env->value)
 		return ;
 	env->value = new_value;
+	printf("NV %s  %s\n", key, new_value);
 	env = block;
 }
 

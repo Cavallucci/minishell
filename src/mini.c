@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:50:42 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/02 15:35:44 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/06 18:16:13 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,35 +105,14 @@ t_env	*get_env_export(char **envp)
 t_data	*init_data(char **envp)
 {
 	t_data	*data;
-//	t_lst	*lst;
 
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
-//	data->cmd_lst = malloc(sizeof(t_lst));
-//	if (!data->cmd_lst)
-//		return (NULL);
 	data->prompt = NULL;
-	// data->cmd_lst = NULL;
 	data->line = NULL;
 	data->env = get_env_export(envp);
 	data->export = get_env_export(envp);
-//	data->cmd_lst->cmd = ft_strdup("echo");
-//	data->cmd_lst->arg = ft_split("echo bonjour", ' ');
-//	data->cmd_lst->path = ft_strdup("/bin/echo");
-//	data->cmd_lst->input = open("infile", O_RDONLY);
-//	data->cmd_lst->output = open("outfile", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-//	data->cmd_lst->builtin = 1;
-//	lst = malloc(sizeof(t_lst));
-//	lst->cmd = ft_strdup("echo");
-//	lst->arg = ft_split("echo bob", ' ');
-//	lst->path = ft_strdup("/bin/echo");
-//	lst->input = -2;
-//	lst->output = open("outfile", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-//	lst->builtin = 1;
-//	lst->next = NULL;
-//	data->cmd_lst->next = lst;
-	// data->exit_value = 0;
 	return (data);
 }
 

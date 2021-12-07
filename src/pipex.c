@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 22:54:07 by paulguign         #+#    #+#             */
-/*   Updated: 2021/12/03 17:39:47 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/06 18:26:28 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	ft_pipe(t_data *data, t_lst *lst, int fd_in, int step)
 	int	ret;
 
 	status = 0;
-	if (lst && lst->builtin && !lst->next && (!ft_strcmp(lst->cmd, "exit") || !ft_strcmp(lst->cmd, "export")))
+	if (lst && !lst->next && lst->builtin && step == 1 && ft_strcmp(lst->cmd, "echo"))
 	{
 		ret = exec_builtin(lst, data);
 		return (ret);
@@ -87,7 +87,7 @@ int	ft_pipe(t_data *data, t_lst *lst, int fd_in, int step)
 			close(fd[1]);
 			fd[1] = open("/dev/stdout", O_WRONLY);
 		}
-		else if (lst->output != 0)// && lst->output != 0)
+		else if (lst->output != 0)
 		{
 			close(fd[1]);
 			fd[1] = lst->output;

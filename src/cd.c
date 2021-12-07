@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 15:58:26 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/03 16:51:45 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/06 14:31:07 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,13 @@ void	update_pwd(t_data *data, char *pwd, char *old_pwd)
 	{
 		add_cell(&data->env, new_cell("PWD", pwd, 1));
 		add_cell(&data->export, new_cell("PWD", pwd, 1));
+		printf("PWD added to env\n");
 	}
 	if (!get_key("OLDPWD", data->env))
 	{
 		add_cell(&data->env, new_cell("OLDPWD", old_pwd, 1));
 		add_cell(&data->export, new_cell("OLDPWD", old_pwd, 1));
+		printf("OLDPWD added to env\n");
 	}
 	if (pwd)
 	{
@@ -116,7 +118,10 @@ int	exec_cd(t_lst *cmd_lst, t_data *data)
 			&& ft_strcmp(cmd_lst->arg[1], ".."))
 			new = use_cdpath(cmd_lst, cdpath);
 		else
+		{
 			new = chdir(cmd_lst->arg[1]);
+			printf("change dir\n");
+		}
 	}
 	pwd = ft_getcwd(); //obtenir le repertoire courant
 	if (new == 0)
@@ -128,6 +133,8 @@ int	exec_cd(t_lst *cmd_lst, t_data *data)
 		ft_putstr_fd(": No such file or directory\n", 2);
 		g_exit_status = 1;
 	}
+	// free(pwd);
+	// free(old_pwd);
 	return (g_exit_status);
 }
 

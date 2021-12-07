@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 14:00:01 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/30 14:00:00 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/06 17:29:07 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,28 @@ int	ft_strcmp(char *s1, char *s2)
 	while (s1[i] && s2[i] && s1[i] == s2[i])
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+int	ft_strncmp(const char *s1, const char *s2, int n)
+{
+	int		i;
+	int		d;
+
+	i = 0;
+	while (s1[i] && s1[i] == s2[i] && i + 1 < n)
+		i++;
+	d = (unsigned char)s1[i] - (unsigned char)s2[i];
+	if (!d || !n)
+		return (0);
+	else if (d < 0)
+		return (-1);
+	else
+		return (1);
+}
+
+int cmp_str(const char *s1, const char *s2)
+{
+	return (!ft_strncmp(s1, s2, ft_strlen(s1)) && !ft_strncmp(s1, s2, ft_strlen(s2)));
 }
 
 char	*ft_strjoin(char *s1, char *s2)

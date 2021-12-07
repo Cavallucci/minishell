@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/06 18:21:11 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/07 17:54:16 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,38 +134,6 @@ static size_t   count_char(const char *s, char c, t_sp *sp)
 				i++;
 			i++;
 			count++;
-		/*	if (s[i] == '"' && s_quote == 0)
-			{
-				d_quote = 1;
-				i++;
-				while (s[i] && s[i] != '"')
-				{
-					count++;
-					i++;
-				}
-				i++;
-			}
-			else if (s[i] == '\'' && d_quote == 0)
-			{
-				s_quote = 1;
-				i++;
-				while (s[i] && s[i] != '\'')
-				{
-					count++;
-					i++;
-				}
-				i++;
-			}
-			else
-			{
-				while (s[i] && !is_charset(s[i]) && s[i] != '"' && s[i] != '\'')
-				{
-					count++;
-					i++;
-				}
-				while (s[i] == ' ')
-					i++;
-			}*/
 		}
 	}
 	else if (c == 'c')
@@ -193,9 +161,72 @@ static char *ft_free(char **dst)
     return (NULL);
 }
 
-static char	*make_split_char(char *s, t_sp *sp)
+char *make_change(char *s, t_sp *sp, t_data *d, int count_c)
 {
-	sp->new[sp->j] = (char *)malloc(sizeof(char) * (count_char(s, 'w', sp) + 1));
+	char	*new;
+	int		size_new;
+	int		i;
+	t_env	*tmp;
+	char	*bis;
+
+	size_new = 0;
+	while (s[sp->line] && !is_charset(s[sp->line]) && s[sp->line] != '"' && s[sp->line] != '\'')
+	{
+		size_new++;
+		sp->line++;
+	}
+	new = (char *)malloc(sizeof(char) * (size_new + 1));
+	sp->line -= size_new;
+	i = 0;
+	while (size_new > 0)
+	{
+		new[i] = s[sp->line];
+		sp->line++;
+		i++;
+		size_new--;
+	}
+	new[i] = 0;
+	tmp = d->env;
+	while (tmp->next && !cmp_str(tmp->key, new))
+		tmp = tmp->next;
+	if (cmp_str(tmp->key, new))
+	{
+	// a faire si pas de path
+	sp->new[sp->j][sp->k] = 0;
+	bis = (char *)malloc(sizeof(char) * (ft_strlen(sp->new[sp->j]) + 1));
+	ft_strcpy(bis, sp->new[sp->j]);
+	free(sp->new[sp->j]);
+	sp->new[sp->j] = NULL;
+	sp->new[sp->j] = (char *)malloc(sizeof(char) * ((count_c - i) + ft_strlen(tmp->value) + 1));
+	i = 0;
+	sp->k = 0;
+	while (bis[i])
+	{
+		sp->new[sp->j][sp->k] = bis[i];
+		sp->k++;
+		i++;
+	}
+	i = 0;
+	while (tmp->value[i])
+	{
+		sp->new[sp->j][sp->k] = tmp->value[i];
+		sp->k++;
+		i++;
+	}
+	}
+	else
+		return (NULL);
+	return (sp->new[sp->j]);
+}
+
+static char	*make_split_char(char *s, t_sp *sp, t_data *d)
+{
+//	int	var_env;
+	int	count_c;
+
+	count_c = count_char(s, 'w', sp);
+//	var_env = 0;
+	sp->new[sp->j] = (char *)malloc(sizeof(char) * (count_c + 1));
 	if (!sp->new[sp->j])
 		return (ft_free(sp->new));
 	sp->k = 0;
@@ -208,14 +239,21 @@ static char	*make_split_char(char *s, t_sp *sp)
 			sp->line++;
 		else if (s[sp->line] == '\'' && sp->d_quote == 0)
 			sp->line++;
-		sp->new[sp->j][sp->k] = s[sp->line];
-		sp->k++;
-		sp->line++;
+		else if (s[sp->line] == '$' && sp->s_quote == 0)
+		{
+//			var_env = 1;
+			sp->line++;
+			make_change(s, sp, d, count_c);
+		}
+		else
+		{
+			sp->new[sp->j][sp->k] = s[sp->line];
+			sp->k++;
+			sp->line++;
+		}
 	}
-	//sp->new[sp->j][sp->k] = s[sp->line];
-	//sp->k++;
-	//sp->line++;
-	sp->new[sp->j][sp->k] = 0;
+//	if (var_env == 0)
+		sp->new[sp->j][sp->k] = 0;
 	return (sp->new[sp->j]);
 }
 /*
@@ -289,7 +327,7 @@ static char	*make_split_chev(char *s, t_sp *sp)
 	return (sp->new[sp->j]);
 }
 
-char	**ft_split_parsing(char *s)
+char	**ft_split_parsing(char *s, t_data *d)
 {
 	t_sp	*sp;
 
@@ -316,7 +354,7 @@ char	**ft_split_parsing(char *s)
 			}
 		}
 		else
-			make_split_char(s, sp);
+			make_split_char(s, sp, d);
 	}
 	sp->new[sp->j] = 0;
 	return (sp->new);
