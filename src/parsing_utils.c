@@ -6,11 +6,18 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/06 14:33:59 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/08 14:48:42 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_isalpha_parsing(int c)
+{
+	if ((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || c == 95)
+		return (1);
+	return (0);
+}
 
 void	ft_swap(char **a, char **b)
 {

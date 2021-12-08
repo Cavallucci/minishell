@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/07 17:54:16 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/08 17:11:36 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_sp	*init_sp()
 	sp->new = NULL;
 	sp->s_quote = 0;
 	sp->d_quote = 0;
+	sp->count_c = 0;
 	return (sp);
 }
 
@@ -161,7 +162,7 @@ static char *ft_free(char **dst)
     return (NULL);
 }
 
-char *make_change(char *s, t_sp *sp, t_data *d, int count_c)
+char *make_change(char *s, t_sp *sp, t_data *d)
 {
 	char	*new;
 	int		size_new;
@@ -170,7 +171,7 @@ char *make_change(char *s, t_sp *sp, t_data *d, int count_c)
 	char	*bis;
 
 	size_new = 0;
-	while (s[sp->line] && !is_charset(s[sp->line]) && s[sp->line] != '"' && s[sp->line] != '\'')
+	while (s[sp->line] && !is_charset(s[sp->line]) && ft_isalpha_parsing(s[sp->line]))
 	{
 		size_new++;
 		sp->line++;
@@ -191,28 +192,29 @@ char *make_change(char *s, t_sp *sp, t_data *d, int count_c)
 		tmp = tmp->next;
 	if (cmp_str(tmp->key, new))
 	{
-	// a faire si pas de path
-	sp->new[sp->j][sp->k] = 0;
-	bis = (char *)malloc(sizeof(char) * (ft_strlen(sp->new[sp->j]) + 1));
-	ft_strcpy(bis, sp->new[sp->j]);
-	free(sp->new[sp->j]);
-	sp->new[sp->j] = NULL;
-	sp->new[sp->j] = (char *)malloc(sizeof(char) * ((count_c - i) + ft_strlen(tmp->value) + 1));
-	i = 0;
-	sp->k = 0;
-	while (bis[i])
-	{
-		sp->new[sp->j][sp->k] = bis[i];
-		sp->k++;
-		i++;
-	}
-	i = 0;
-	while (tmp->value[i])
-	{
-		sp->new[sp->j][sp->k] = tmp->value[i];
-		sp->k++;
-		i++;
-	}
+		sp->new[sp->j][sp->k] = 0;
+		bis = (char *)malloc(sizeof(char) * (ft_strlen(sp->new[sp->j]) + 1));
+		ft_strcpy(bis, sp->new[sp->j]);
+		free(sp->new[sp->j]);
+		sp->new[sp->j] = NULL;
+	printf("count c = %i\n", sp->count_c);
+		sp->new[sp->j] = (char *)malloc(sizeof(char) * ((sp->count_c - i) + ft_strlen(tmp->value) + 1));
+	printf("malloc = %li\n", (sp->count_c - i) + ft_strlen(tmp->value));
+		i = 0;
+		sp->k = 0;
+		while (bis[i])
+		{
+			sp->new[sp->j][sp->k] = bis[i];
+			sp->k++;
+			i++;
+		}
+		i = 0;
+		while (tmp->value[i])
+		{
+			sp->new[sp->j][sp->k] = tmp->value[i];
+			sp->k++;
+			i++;
+		}
 	}
 	else
 		return (NULL);
@@ -221,12 +223,8 @@ char *make_change(char *s, t_sp *sp, t_data *d, int count_c)
 
 static char	*make_split_char(char *s, t_sp *sp, t_data *d)
 {
-//	int	var_env;
-	int	count_c;
-
-	count_c = count_char(s, 'w', sp);
-//	var_env = 0;
-	sp->new[sp->j] = (char *)malloc(sizeof(char) * (count_c + 1));
+	sp->count_c = count_char(s, 'w', sp);
+	sp->new[sp->j] = (char *)malloc(sizeof(char) * (sp->count_c + 1));
 	if (!sp->new[sp->j])
 		return (ft_free(sp->new));
 	sp->k = 0;
@@ -239,11 +237,10 @@ static char	*make_split_char(char *s, t_sp *sp, t_data *d)
 			sp->line++;
 		else if (s[sp->line] == '\'' && sp->d_quote == 0)
 			sp->line++;
-		else if (s[sp->line] == '$' && sp->s_quote == 0)
+		else if ((s[sp->line] == '$' && ft_isalpha_parsing(s[sp->line + 1])) && sp->s_quote == 0)
 		{
-//			var_env = 1;
 			sp->line++;
-			make_change(s, sp, d, count_c);
+			make_change(s, sp, d);
 		}
 		else
 		{
@@ -252,8 +249,7 @@ static char	*make_split_char(char *s, t_sp *sp, t_data *d)
 			sp->line++;
 		}
 	}
-//	if (var_env == 0)
-		sp->new[sp->j][sp->k] = 0;
+	sp->new[sp->j][sp->k] = 0;
 	return (sp->new[sp->j]);
 }
 /*

@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/07 14:42:58 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/08 17:11:57 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ typedef struct s_sp
     char    **new;
 	int		s_quote;
 	int		d_quote;
+	int		count_c;
 }t_sp;
 
 /*---------------------lst.c--------------------------*/
@@ -182,6 +183,7 @@ char	**ft_split_parsing(char *s, t_data *d);
 
 /*---------------------parsing_utils.c--------------------*/
 
+int		ft_isalpha_parsing(int c);
 t_lst   *create_cell(char *cmd);
 t_lst   *add_cell_pos(t_lst *list, char *cmd, int pos);
 void    print_list(t_lst *list);
@@ -194,6 +196,7 @@ char	*ft_strcpy(char *dest, char *src);
 void	ft_swap(char **a, char **b);
 int		ft_strcmp_parsing(char *s1, char *s2);
 int		ft_strncmp_parsing(char *s1, char *s2, int n);
+char	*make_change(char *s, t_sp *sp, t_data *d);
 
 /*---------------------parsing.c--------------------------*/
 
