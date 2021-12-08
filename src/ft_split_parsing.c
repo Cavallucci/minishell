@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/08 17:11:36 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/08 17:31:43 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_sp	*init_sp()
 	sp->s_quote = 0;
 	sp->d_quote = 0;
 	sp->count_c = 0;
+	sp->remember_mem = 0;
 	return (sp);
 }
 
@@ -197,8 +198,11 @@ char *make_change(char *s, t_sp *sp, t_data *d)
 		ft_strcpy(bis, sp->new[sp->j]);
 		free(sp->new[sp->j]);
 		sp->new[sp->j] = NULL;
-	printf("count c = %i\n", sp->count_c);
-		sp->new[sp->j] = (char *)malloc(sizeof(char) * ((sp->count_c - i) + ft_strlen(tmp->value) + 1));
+		if (sp->remember_mem == 0)
+			sp->new[sp->j] = (char *)malloc(sizeof(char) * ((sp->count_c - i) + ft_strlen(tmp->value) + 1));
+		else
+			sp->new[sp->j] = (char *)malloc(sizeof(char) * (sp->remember_mem + ft_strlen(tmp->value) + 1));
+		sp->remember_mem += ft_strlen(tmp->value);
 	printf("malloc = %li\n", (sp->count_c - i) + ft_strlen(tmp->value));
 		i = 0;
 		sp->k = 0;

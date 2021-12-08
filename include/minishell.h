@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/08 17:11:57 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/08 17:28:31 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ typedef struct s_sp
 	int		s_quote;
 	int		d_quote;
 	int		count_c;
+	int		remember_mem;
 }t_sp;
 
 /*---------------------lst.c--------------------------*/
