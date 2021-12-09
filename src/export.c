@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 14:51:48 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/09 12:07:04 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/09 17:04:08 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 void	change_cell_env(char *key, char *new_value, t_env *env)
 {
-	t_env	*block;
+	 t_env    *block;
 
-	block = env;
-	while (env)
-	{
-		if (!ft_strcmp(env->key, key))
-			break ;
-		env = env->next;
-	}
-	env->value = malloc (sizeof(char) * (ft_strlen(new_value) + 1));
-	if (!env->value)
-		return ;
-	env->value = new_value;
-	env = block;
+    block = env;
+    while (block)
+    {
+        if (!ft_strcmp(block->key, key))
+            break ;
+        block = block->next;
+    }
+    if (!block->value[0])
+        block->with_value = 0;
+    block->value = ft_strdup(new_value);
+    if (!block->value)
+        return ;
 }
 
 int	already_there(char *arg, t_env *env)
