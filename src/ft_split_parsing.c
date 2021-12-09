@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/08 17:31:43 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/09 15:13:08 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,19 +123,20 @@ static size_t   count_char(const char *s, char c, t_sp *sp)
 	count = 0;
 	if (c == 'w')
 	{
-		while (s[i] && !is_charset(s[i]))
+		while (s[i])
 		{
 			check_quote(s[i], sp);
-			while (s[i] == ' ')
-				i++;
-			if (s[i] == ' ' && sp->s_quote == 0 && sp->d_quote == 0)
-				break ;
+			if (is_charset(s[i]) && sp->s_quote == 0 && sp->d_quote == 0)
+				break;
 			if (s[i] == '"' && sp->s_quote == 0)
 				i++;
 			else if (s[sp->line] == '\'' && sp->d_quote == 0)
 				i++;
-			i++;
-			count++;
+			else
+			{
+				i++;
+				count++;
+			}
 		}
 	}
 	else if (c == 'c')
@@ -311,6 +312,7 @@ static char	*make_split_u(char *s, t_sp *sp)
 	return (sp->new[sp->j]);
 }
 */
+
 static char	*make_split_chev(char *s, t_sp *sp)
 {
 	sp->new[sp->j] = (char *)malloc(sizeof(char) * (count_char(s, 'c', sp) + 1));
@@ -345,7 +347,7 @@ char	**ft_split_parsing(char *s, t_data *d)
 		if (is_charset(s[sp->line]))
 		{
 			if (s[sp->line] == '<' || s[sp->line] == '>')
-					make_split_chev(s, sp);
+				make_split_chev(s, sp);
 			else
 			{
 				while (s[sp->line] == ' ')

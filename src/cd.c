@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 15:58:26 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/06 14:31:07 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/09 12:01:44 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,7 @@ int	exec_cd(t_lst *cmd_lst, t_data *data)
 			&& ft_strcmp(cmd_lst->arg[1], ".."))
 			new = use_cdpath(cmd_lst, cdpath);
 		else
-		{
 			new = chdir(cmd_lst->arg[1]);
-			printf("change dir\n");
-		}
 	}
 	pwd = ft_getcwd(); //obtenir le repertoire courant
 	if (new == 0)

@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/07 15:25:10 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/09 12:30:05 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ int	check_sep(t_sep *sep)
 {
 	if (sep->simple_quo % 2 == 1 || sep->double_quo % 2 == 1)
 	{
-		ft_putstr("Syntax error\n");
-		return (1);
+		ft_putstr("Syntax error : unmatched quote\n");
+		g_exit_status = 2;
+		return (g_exit_status);
 	}
 	return (0);
 }
@@ -349,7 +350,7 @@ t_lst	*parsing(t_data *d)
 				printf("free_split et split_pipe\n");
 			i++;
 		}
-//	print_list(d->cmd_lst);
+	print_list(d->cmd_lst);
 	}
 	return (d->cmd_lst);
 }
