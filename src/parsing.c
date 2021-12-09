@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/09 12:30:05 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/09 16:43:55 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,12 +318,13 @@ t_lst	*parsing(t_data *d)
 	i = 0;
 	init_sep(sep);
 	fill_sep(d, sep);
+	cell = init_cell();
 	if (!check_sep(sep))
 	{
 		split_pipe = ft_split(d->line, '|');
 		if (!split_pipe[i])
 		{
-			cell = init_cell();
+	//		cell = init_cell();
 			cell->next = NULL;
 			add_cell_parsing(d, cell);
 		}
@@ -352,5 +353,7 @@ t_lst	*parsing(t_data *d)
 		}
 	print_list(d->cmd_lst);
 	}
+	else
+		return (cell);
 	return (d->cmd_lst);
 }
