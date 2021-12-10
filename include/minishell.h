@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/08 17:28:31 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/10 17:22:18 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,19 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+typedef struct s_sp
+{
+    int     line;
+    int     count;
+    int     j;
+    int     k;
+    char    **new;
+	int		s_quote;
+	int		d_quote;
+	int		count_c;
+	int		remember_mem;
+}t_sp;
+
 typedef struct s_data
 {
 	char	*prompt;
@@ -50,6 +63,7 @@ typedef struct s_data
 	t_env	*env;
 	t_env	*export;
 	t_lst	*cmd_lst;
+	t_sp	*sp;
 	int		exit_value;
 
 }		t_data;
@@ -67,19 +81,6 @@ typedef struct s_sep
 	char	*infile;
 	char	*outfile;
 }t_sep;
-
-typedef struct s_sp
-{
-    int     line;
-    int     count;
-    int     j;
-    int     k;
-    char    **new;
-	int		s_quote;
-	int		d_quote;
-	int		count_c;
-	int		remember_mem;
-}t_sp;
 
 /*---------------------lst.c--------------------------*/
 
@@ -176,11 +177,13 @@ void	free_str(char **str);
 
 /*---------------------ft_split_parsing.c--------------------------*/
 
+t_sp    *init_sp();
 void	free_split(char **args);
 char	**ft_split(const char *s, char c);
 t_sp	*init_sp();
 int		is_charset(char s);
 char	**ft_split_parsing(char *s, t_data *d);
+char 	*make_change(char *s, t_data *d);
 
 /*---------------------parsing_utils.c--------------------*/
 
@@ -197,7 +200,7 @@ char	*ft_strcpy(char *dest, char *src);
 void	ft_swap(char **a, char **b);
 int		ft_strcmp_parsing(char *s1, char *s2);
 int		ft_strncmp_parsing(char *s1, char *s2, int n);
-char	*make_change(char *s, t_sp *sp, t_data *d);
+void    ft_free_str(char **str);
 
 /*---------------------parsing.c--------------------------*/
 

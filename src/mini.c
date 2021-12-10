@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:50:42 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/09 16:44:12 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/10 17:39:38 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ t_data	*init_data(char **envp)
 	data->line = NULL;
 	data->env = get_env_export(envp);
 	data->export = get_env_export(envp);
+	data->sp = NULL;
 	return (data);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/09 18:32:47 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/10 17:40:20 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,20 +319,23 @@ t_lst	*parsing(t_data *d)
 	init_sep(sep);
 	fill_sep(d, sep);
 	cell = init_cell();
+	cell->next = NULL;
 	if (!check_sep(sep))
 	{
 		split_pipe = ft_split(d->line, '|');
 		if (!split_pipe[i])
 		{
-	//		cell = init_cell();
-			cell->next = NULL;
+			ft_free_str(split_pipe);
 			add_cell_parsing(d, cell);
+			return (d->cmd_lst);
 		}
 		while (split_pipe[i])
 		{
 			split = ft_split_parsing(split_pipe[i], d);
 			if (!check_chev(split))
 			{
+				free(cell);
+				cell = NULL;
 				cell = init_cell();
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
 
@@ -343,18 +346,27 @@ t_lst	*parsing(t_data *d)
 				cell = fill_arg(split, cell); // remplir les arguments
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
-				// printf("%s\n", d->cmd_lst->cmd);
 			//free split_pipe
 			print_sep(sep, split);
 			}
 			else
-				return (cell);
+			{
+				ft_free_str(split_pipe);
+				add_cell_parsing(d, cell);
+				return (d->cmd_lst);
+			}
 				//printf("free_split et split_pipe\n");
 			i++;
+			free(d->sp);
+			d->sp = NULL;
 		}
+	ft_free_str(split_pipe);
 	print_list(d->cmd_lst);
 	}
 	else
-		return (cell);
+	{
+		add_cell_parsing(d, cell);		
+		return (d->cmd_lst);
+	}
 	return (d->cmd_lst);
 }

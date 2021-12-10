@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/09 16:57:24 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/10 14:25:48 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,8 @@ void    print_list(t_lst *list)
 	}
 }
 
+
+
 t_lst	*create_new_char(t_lst *cell, char *split, char **arg, char what)
 {
 	if (what == 'c')	//commande
@@ -173,4 +175,17 @@ int	found_place_raft(char **split, int i)
 		i++;
 	}
 	return (-1);
+}
+
+void	ft_free_str(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);
 }
