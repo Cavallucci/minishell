@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/09 17:00:54 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/10 12:00:34 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static int   count_charset(const char *s)
 			{
 				while (s[i] && !is_charset(s[i]) && s[i] != '"' && s[i] != '\'')
 					i++;
-				if (s[i] && s[i] != ' ')
+				if (s[i] && !is_charset(s[i]))
 					words--;
 			}
 			words++;

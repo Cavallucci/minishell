@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/09 16:57:21 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/09 18:32:47 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,7 +345,7 @@ t_lst	*parsing(t_data *d)
 				add_cell_parsing(d, cell);
 				// printf("%s\n", d->cmd_lst->cmd);
 			//free split_pipe
-	//		print_sep(sep, split);
+			print_sep(sep, split);
 			}
 			else
 				return (cell);
