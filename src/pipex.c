@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 22:54:07 by paulguign         #+#    #+#             */
-/*   Updated: 2021/12/06 18:26:28 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/11 16:36:35 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	ft_pipe(t_data *data, t_lst *lst, int fd_in, int step)
 	pid = fork();
 	if (error_catch(pid < 0, NULL, strerror(errno)))
 		exit (1);
-		//exit (ft_free_data(data, 1));
+	//exit (ft_free_data(data, 1));
 	if (pid == 0)
 	{
 		close(fd[0]);

@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:50:42 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/10 17:39:38 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/11 17:52:47 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,11 +131,11 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		d->line = readline(d->prompt);
+		add_history(d->line);
 		d->cmd_lst = parsing(d);
 		if (d->cmd_lst->cmd)
 		{
 			ft_pipe(d, d->cmd_lst, -1, 1);
-			add_history(d->line);
 		}
 		if (d->cmd_lst)
 			free_cmd_lst(d, &d->cmd_lst);

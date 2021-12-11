@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/10 17:40:20 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/11 18:22:08 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,11 +170,17 @@ t_lst	*fill_in_out_file(char **split, t_sep *sep, t_lst *cell)
 	//	if (cell->output > 0)
 	//		close(cell->output);
 		if (split[place_raft][0] == '<' && split[place_raft][1] != '<')
+		{
+			printf("infile: |%s|\n", sep->infile);
 			cell = create_new_int(cell, 'i', open(sep->infile, O_RDONLY));
+		}
 		else if (split[place_raft][0] == '>' && split[place_raft][1] != '>')
-			cell = create_new_int(cell, 'o', open(sep->outfile, O_CREAT | O_RDWR | O_TRUNC, 0644));
+		{
+			printf("outfile: |%s|\n", sep->outfile);
+			cell = create_new_int(cell, 'o', open(sep->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644));
+		}
 		else if (split[place_raft][0] == '>' && split[place_raft][1] == '>')
-			cell = create_new_int(cell, 'i', open(sep->infile, O_CREAT | O_RDWR | O_APPEND, 0644));
+			cell = create_new_int(cell, 'i', open(sep->infile, O_CREAT | O_WRONLY | O_APPEND, 0644));
 		else if (split[place_raft][0] == '<' && split[place_raft][1] == '<')
 		{
 			if (cell->input > 0)
@@ -318,13 +324,15 @@ t_lst	*parsing(t_data *d)
 	i = 0;
 	init_sep(sep);
 	fill_sep(d, sep);
-	cell = init_cell();
-	cell->next = NULL;
+//	cell = init_cell();
+//	cell->next = NULL;
 	if (!check_sep(sep))
 	{
 		split_pipe = ft_split(d->line, '|');
 		if (!split_pipe[i])
 		{
+			cell = init_cell();
+			cell->next = NULL;
 			ft_free_str(split_pipe);
 			add_cell_parsing(d, cell);
 			return (d->cmd_lst);
@@ -334,8 +342,8 @@ t_lst	*parsing(t_data *d)
 			split = ft_split_parsing(split_pipe[i], d);
 			if (!check_chev(split))
 			{
-				free(cell);
-				cell = NULL;
+//				free(cell);
+//				cell = NULL;
 				cell = init_cell();
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
 
@@ -347,10 +355,11 @@ t_lst	*parsing(t_data *d)
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
 			//free split_pipe
-			print_sep(sep, split);
+//			print_sep(sep, split);
 			}
 			else
 			{
+				cell = init_cell();
 				ft_free_str(split_pipe);
 				add_cell_parsing(d, cell);
 				return (d->cmd_lst);
@@ -365,6 +374,7 @@ t_lst	*parsing(t_data *d)
 	}
 	else
 	{
+		cell = init_cell();
 		add_cell_parsing(d, cell);		
 		return (d->cmd_lst);
 	}
