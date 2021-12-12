@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/12 15:50:26 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/12 17:10:12 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,18 @@ int	check_chev(char **split)
 		{
 			while (split[i][j])
 			{
-				if ((split[i][j] == '<' && split[i][j + 1] == '<' && split[i][j + 2] == '<' && split[i][j + 3] == '<') || (split[i][j] == '>' && split[i][j + 1] == '>' && split[i][j + 2] == '>' && split[i][j + 3] == '>') || (split[i][j] == '<' && split[i][j + 1] == '>') || (split[i][j] == '>' && split[i][j + 1] == '<'))
-					return (1);
+				if ((split[i][j] == '<' && split[i][j + 1] == '<' && split[i][j + 2] == '<' && split[i][j + 3] == '<') || (split[i][j] == '<' && split[i][j + 1] == '>'))
+				{
+					ft_putstr("syntax error near unexpected token `<<<'\n");
+					g_exit_status = 2;
+					return (g_exit_status);
+				}
+				else if ((split[i][j] == '>' && split[i][j + 1] == '>' && split[i][j + 2] == '>' && split[i][j + 3] == '>') || (split[i][j] == '>' && split[i][j + 1] == '<'))
+				{
+					ft_putstr("syntax error near unexpected token `>>>'\n");
+					g_exit_status = 2;
+					return (g_exit_status);
+				}
 				j++;
 			}
 		}
@@ -120,6 +130,48 @@ int	check_chev(char **split)
 	return (0);
 }
 
+int	check_pipe_space(char *split_pipe)
+{
+	int	i;
+	int	not_space;
+
+	i = 0;
+	not_space = 0;
+	while (split_pipe[i])
+	{
+		if (split_pipe[i] != ' ')
+			not_space++;
+		i++;
+	}
+	return (not_space);
+}
+
+int	check_pipe(char **split_pipe)
+{
+	int	i;
+
+	i = 0;
+	if (split_pipe[i])
+	{
+		while (split_pipe[i])
+		{
+			if (!check_pipe_space(split_pipe[i]))
+			{
+				ft_putstr("syntax error near unexpected token `|'\n");
+				g_exit_status = 2;
+				return (g_exit_status);
+			}
+			i++;
+		}
+	}
+	else
+	{
+		ft_putstr("syntax error near unexpected token `|'\n");
+		g_exit_status = 2;
+		return (g_exit_status);
+	}
+	return (0);
+}
 
 t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell)
 {
@@ -330,7 +382,7 @@ t_lst	*parsing(t_data *d)
 	if (!check_sep(sep))
 	{
 		split_pipe = ft_split(d->line, '|');
-		if (!split_pipe[i])
+		if (!split_pipe[i] || check_pipe(split_pipe))
 		{
 			cell = init_cell();
 			cell->next = NULL;
@@ -347,7 +399,6 @@ t_lst	*parsing(t_data *d)
 //				cell = NULL;
 				cell = init_cell();
 				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
-
 				cell = fill_in_out_file(split, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
 				cell = fill_builtin(cell);
 				if (cell->builtin == 0)
