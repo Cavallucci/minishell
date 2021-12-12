@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/11 18:22:08 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/12 15:50:26 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,29 +128,30 @@ t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell)
 	place_raft = found_place_raft(split, 0);
 	if (place_raft != -1)
 	{
-		if (split[place_raft][0] == '<')
+		while (place_raft != -1)
 		{
-			sep->infile = split[place_raft + 1];
-			if (place_raft != 0)
+			if (split[place_raft][0] == '<')
 			{
-				while (split[place_raft - 1][0] == '-')
-					place_raft -= 1;
-				cell = create_new_char(cell, split[place_raft - 1], NULL, 'c');
+				sep->infile = split[place_raft + 1];
+				if (place_raft != 0)
+				{
+					while (split[place_raft - 1][0] == '-')
+						place_raft -= 1;
+					cell = create_new_char(cell, split[place_raft - 1], NULL, 'c');
+				}
+				else
+				{
+					cell = create_new_char(cell, split[place_raft + 2], NULL, 'c');
+					ft_swap(&split[place_raft + 1], &split[place_raft + 2]);
+				}
 			}
-			else
+			else if (split[place_raft][0] == '>')
 			{
-				cell = create_new_char(cell, split[place_raft + 2], NULL, 'c');
-				ft_swap(&split[place_raft + 1], &split[place_raft + 2]);
+				sep->outfile = split[place_raft + 1];
+				if (!cell->cmd)
+					cell = create_new_char(cell, split[0], NULL, 'c');
 			}
-		}
-		else if (split[place_raft][0] == '>')
-		{
-			sep->outfile = split[place_raft + 1];
-		/*	while (split[place_raft - 1][0] == '-')
-				place_raft -= 1;
-			cell = create_new_char(cell, split[place_raft - 1], NULL, 'c');
-		*/
-			cell = create_new_char(cell, split[0], NULL, 'c');
+			place_raft = found_place_raft(split, place_raft + 1);
 		}
 	}
 	else
