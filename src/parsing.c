@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/13 14:15:31 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/13 16:05:16 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,39 +90,39 @@ t_lst	*init_cell()
 	return (cell);
 }
 
-void	print_sep(t_sep *sep, char **split)
+void	print_sep(t_sep *sep, t_data *d)
 {
 	printf("| = %i\n&& = %i\n' = %i\n\" = %i\n< = %i\n> = %i\n<< = %i\n>> = %i\ninfile = %s\noutfile = %s\n", sep->pipe, sep->double_and, sep->simple_quo, sep->double_quo, sep->simple_raft_left, sep->simple_raft_right, sep->double_raft_left, sep->double_raft_right, sep->infile, sep->outfile);
-	for(int q=0; split[q]; q++)
-		printf("split[%i] = %s\n", q, split[q]);
+	for(int q=0; d->split[q]; q++)
+		printf("d->split[%i] = %s\n", q, d->split[q]);
 }
 
-int	check_chev(char **split)
+int	check_chev(t_data *d)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (split[i])
+	while (d->split[i])
 	{
 		j = 0;
-		if (split[i][0] != '"' && split[i][0] != '\'')
+		if (d->split[i][0] != '"' && d->split[i][0] != '\'')
 		{
-			while (split[i][j])
+			while (d->split[i][j])
 			{
-				if ((split[i][j] == '<' && split[i][j + 1] == '<' && split[i][j + 2] == '<' && split[i][j + 3] == '<') || (split[i][j] == '<' && split[i][j + 1] == '>'))
+				if ((d->split[i][j] == '<' && d->split[i][j + 1] == '<' && d->split[i][j + 2] == '<' && d->split[i][j + 3] == '<') || (d->split[i][j] == '<' && d->split[i][j + 1] == '>'))
 				{
 					ft_putstr("syntax error near unexpected token `<<<'\n");
 					g_exit_status = 2;
 					return (g_exit_status);
 				}
-				else if ((split[i][j] == '>' && split[i][j + 1] == '>' && split[i][j + 2] == '>' && split[i][j + 3] == '>') || (split[i][j] == '>' && split[i][j + 1] == '<'))
+				else if ((d->split[i][j] == '>' && d->split[i][j + 1] == '>' && d->split[i][j + 2] == '>' && d->split[i][j + 3] == '>') || (d->split[i][j] == '>' && d->split[i][j + 1] == '<'))
 				{
 					ft_putstr("syntax error near unexpected token `>>>'\n");
 					g_exit_status = 2;
 					return (g_exit_status);
 				}
-				else if (split[i][j] == '>' && split[i + 1] == NULL)
+				else if (d->split[i][j] == '>' && d->split[i + 1] == NULL)
 				{
 					ft_putstr("syntax error near unexpected token `newline'\n");
 					g_exit_status = 2;
@@ -179,94 +179,94 @@ int	check_pipe(char **split_pipe, t_sep *sep)
 	return (0);
 }
 
-t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell)
+t_lst	*check_infile_outfile(t_data *d, t_sep *sep, t_lst *cell)
 {
 	int		place_raft;
 
-	place_raft = found_place_raft(split, 0);
+	place_raft = found_place_raft(d->split, 0);
 	if (place_raft != -1)
 	{
 		while (place_raft != -1)
 		{
-			if (split[place_raft][0] == '<')
+			if (d->split[place_raft][0] == '<')
 			{
-				sep->infile = split[place_raft + 1];
+				sep->infile = d->split[place_raft + 1];
 				if (place_raft != 0)
 				{
-					while (split[place_raft - 1][0] == '-')
+					while (d->split[place_raft - 1][0] == '-')
 						place_raft -= 1;
-					cell = create_new_char(cell, split[place_raft - 1], NULL, 'c');
+					cell = create_new_char(cell, d->split[place_raft - 1], NULL, 'c');
 				}
 				else
 				{
-					cell = create_new_char(cell, split[place_raft + 2], NULL, 'c');
-					ft_swap(&split[place_raft + 1], &split[place_raft + 2]);
+					cell = create_new_char(cell, d->split[place_raft + 2], NULL, 'c');
+					ft_swap(&d->split[place_raft + 1], &d->split[place_raft + 2]);
 				}
 			}
-			else if (split[place_raft][0] == '>')
+			else if (d->split[place_raft][0] == '>')
 			{
-				sep->outfile = split[place_raft + 1];
+				sep->outfile = d->split[place_raft + 1];
 				if (!cell->cmd)
-					cell = create_new_char(cell, split[0], NULL, 'c');
+					cell = create_new_char(cell, d->split[0], NULL, 'c');
 			}
-			place_raft = found_place_raft(split, place_raft + 1);
+			place_raft = found_place_raft(d->split, place_raft + 1);
 		}
 	}
 	else
-		cell = create_new_char(cell, split[0], NULL, 'c');
+		cell = create_new_char(cell, d->split[0], NULL, 'c');
 	return (cell);
 }
 
-t_lst	*fill_in_out_file(char **split, t_sep *sep, t_lst *cell)
+t_lst	*fill_in_out_file(t_data *d, t_sep *sep, t_lst *cell)
 {
 	int	place_raft;
 
-	place_raft = found_place_raft(split, 0);
+	place_raft = found_place_raft(d->split, 0);
 	while (place_raft != -1)
 	{
 	//	if (cell->input > 0)
 	//		close(cell->input);
 	//	if (cell->output > 0)
 	//		close(cell->output);
-		if (split[place_raft][0] == '<' && split[place_raft][1] != '<')
+		if (d->split[place_raft][0] == '<' && d->split[place_raft][1] != '<')
 		{
 			printf("infile: |%s|\n", sep->infile);
 			cell = create_new_int(cell, 'i', open(sep->infile, O_RDONLY));
 		}
-		else if (split[place_raft][0] == '>' && split[place_raft][1] != '>')
+		else if (d->split[place_raft][0] == '>' && d->split[place_raft][1] != '>')
 		{
 			printf("outfile: |%s|\n", sep->outfile);
 			cell = create_new_int(cell, 'o', open(sep->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644));
 		}
-		else if (split[place_raft][0] == '>' && split[place_raft][1] == '>')
+		else if (d->split[place_raft][0] == '>' && d->split[place_raft][1] == '>')
 			cell = create_new_int(cell, 'i', open(sep->infile, O_CREAT | O_WRONLY | O_APPEND, 0644));
-		else if (split[place_raft][0] == '<' && split[place_raft][1] == '<')
+		else if (d->split[place_raft][0] == '<' && d->split[place_raft][1] == '<')
 		{
 			if (cell->input > 0)
 				close(cell->input);
 			//heredoc;
 		}
 //		add_cell_parsing(d, list);
-		place_raft = found_place_raft(split, place_raft + 1);
+		place_raft = found_place_raft(d->split, place_raft + 1);
 	}
 	return (cell);
 }
 
-int	found_cmd(char **split, t_lst *cell)
+int	found_cmd(t_data *d, t_lst *cell)
 {
 	int	i;
 
 	i = 0;
-	while (split[i])
+	while (d->split[i])
 	{
-		if (ft_strcmp_parsing(cell->cmd, split[i]) != 1)
+		if (ft_strcmp_parsing(cell->cmd, d->split[i]) != 1)
 			return (i);
 		i++;
 	}
 	return (-1);
 }
 
-t_lst	*fill_arg(char **split, t_lst *cell)
+t_lst	*fill_arg(t_data *d, t_lst *cell)
 {
 	int		place_cmd;
 	char	**arg;
@@ -274,21 +274,21 @@ t_lst	*fill_arg(char **split, t_lst *cell)
 	int		tmp;
 
 	i = 0;
-	place_cmd = found_cmd(split, cell);
+	place_cmd = found_cmd(d, cell);
 	if (place_cmd != -1)
 	{
 		tmp = place_cmd;
-		while (split[place_cmd])
+		while (d->split[place_cmd])
 			place_cmd++;
 		arg = malloc(sizeof(char*) * (place_cmd + 1));
 		if (!arg)
 			return (NULL);
 		place_cmd = tmp;
-		while (split[place_cmd] && split[place_cmd][0] != '|')
+		while (d->split[place_cmd] && d->split[place_cmd][0] != '|')
 		{
-			if (split[place_cmd][0] == '<' || split[place_cmd][0] == '>')
+			if (d->split[place_cmd][0] == '<' || d->split[place_cmd][0] == '>')
 				break;
-			arg[i] = split[place_cmd];
+			arg[i] = d->split[place_cmd];
 			i++;
 			place_cmd++;
 		}
@@ -376,7 +376,6 @@ t_lst	*parsing(t_data *d)
 {
 	t_sep	sep[1];
 	char	**split_pipe;
-	char	**split;
 	int		i;
 	t_lst	*cell;
 
@@ -398,22 +397,22 @@ t_lst	*parsing(t_data *d)
 		}
 		while (split_pipe[i])
 		{
-			split = ft_split_parsing(split_pipe[i], d);
-			if (!check_chev(split))
+			d->split = ft_split_parsing(split_pipe[i], d);
+			if (!check_chev(d))
 			{
 //				free(cell);
 //				cell = NULL;
 				cell = init_cell();
-				cell = check_infile_outfile(split, sep, cell); //--> detecte la cmd quand il y a chevrons
-				cell = fill_in_out_file(split, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
+				cell = check_infile_outfile(d, sep, cell); //--> detecte la cmd quand il y a chevrons
+				cell = fill_in_out_file(d, sep, cell);	//ouvrir et detecte les fichiers avec chevrons
 				cell = fill_builtin(cell);
 				if (cell->builtin == 0)
 					cell = found_path(cell, d);
-				cell = fill_arg(split, cell); // remplir les arguments
+				cell = fill_arg(d, cell); // remplir les arguments
 				cell->next = NULL;
 				add_cell_parsing(d, cell);
 			//free split_pipe
-//			print_sep(sep, split);
+//			print_sep(sep, d);
 			}
 			else
 			{

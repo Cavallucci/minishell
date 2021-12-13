@@ -27,6 +27,7 @@ SOURCES =	mini.c \
 			pipex.c \
 			error.c \
 			exec.c \
+			signal.c \
 			free.c
 
 SRC	= $(addprefix $(SRC_PATH)/,$(SOURCES))

@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:50:42 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/13 13:41:38 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/13 16:15:57 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,11 @@ t_data	*init_data(char **envp)
 	data->export = get_env_export(envp);
 	data->sp = NULL;
 	data->cmd_lst = NULL;
+	data->split = NULL;
+	init_signal(data);
 	return (data);
 }
-
+/*
 int	main(int argc, char **argv, char **envp)
 {
 	(void)	argv;
@@ -138,9 +140,45 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (d->cmd_lst)
 			free_cmd_lst(d, &d->cmd_lst);
+		ft_free_str(d->split);
 	}
-//	ft_free_all(d);
+	ft_free_all(d);
 	return (0);
+}
+*/
+int    main(int argc, char **argv, char **envp)
+{
+    (void)    argv;
+    t_data    *d;
+
+    if (*envp == NULL)
+    {
+        ft_putstr_fd("Basic environment variables are missing\n", 2);
+        exit (1);
+    }
+    if (argc != 1)
+        exit(EXIT_FAILURE);
+    d = init_data(envp);
+    if (!d)
+        return(1);
+    d->prompt = design_prompt(d);
+    while (1)
+    {
+        d->line = readline(d->prompt);
+        if (!d->line)
+            break;
+        add_history(d->line);
+        d->cmd_lst = parsing(d);
+        if (d->cmd_lst->cmd)
+        {
+            ft_pipe(d, d->cmd_lst, -1, 1);
+        }
+        if (d->cmd_lst)
+            free_cmd_lst(d, &d->cmd_lst);
+    }
+    //free(add_history)
+    ft_free_all(d);
+    return (0);
 }
 
 /*

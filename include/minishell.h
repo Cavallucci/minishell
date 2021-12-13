@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/11 18:58:41 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/13 16:17:51 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <errno.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -64,6 +65,7 @@ typedef struct s_data
 	t_env	*export;
 	t_lst	*cmd_lst;
 	t_sp	*sp;
+	char	**split;
 	int		exit_value;
 
 }		t_data;
@@ -81,6 +83,8 @@ typedef struct s_sep
 	char	*infile;
 	char	*outfile;
 }t_sep;
+
+void	init_signal(t_data *data);
 
 /*---------------------lst.c--------------------------*/
 
@@ -207,10 +211,9 @@ void    ft_free_str(char **str);
 
 void	check_separators(t_data *d, t_sep *sep);
 void	init_sep(t_sep *sep);
-void	print_sep(t_sep *sep, char **split);
-void	check_dash(char **split);
-t_lst	*check_infile_outfile(char **split, t_sep *sep, t_lst *cell);
-t_lst	*fill_in_out_file(char **split, t_sep *sep, t_lst *cell);
+void	print_sep(t_sep *sep, t_data *split);
+t_lst	*check_infile_outfile(t_data *d, t_sep *sep, t_lst *cell);
+t_lst	*fill_in_out_file(t_data *d, t_sep *sep, t_lst *cell);
 t_lst	*parsing(t_data *d);
 
 #endif
