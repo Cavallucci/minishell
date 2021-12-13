@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/10 14:25:48 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/13 12:35:50 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,10 @@ void	add_cell_parsing(t_data *d, t_lst *new)
 {
     t_lst	*last;
 
-    if (!(d->cmd_lst))
-        d->cmd_lst = new;
-    else
-    {
+    if (d && !(d->cmd_lst))
+       	d->cmd_lst = new;
+   	 else
+   	 {
 		last = d->cmd_lst;
 		while (last->next != NULL)
 			last = last->next;

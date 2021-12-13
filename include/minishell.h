@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/10 17:22:18 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/11 18:58:41 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int		ft_strcmp(char *s1, char *s2);
 int		ft_strncmp(const char *s1, const char *s2, int n);
 int 	cmp_str(const char *s1, const char *s2);
 char	*ft_strjoin(char *s1, char *s2);
+char	*ft_free_strjoin(char *s1, char *s2);
 int		ft_atoi(const char *str);
 char	*ft_strdup(const char *s1);
 void	ft_putstr_fd(char *s, int fd);

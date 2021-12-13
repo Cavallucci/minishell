@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:50:42 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/11 17:52:47 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/13 13:41:38 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ char	*design_prompt(t_data *data)
 
 	user = get_key("USER", data->env);
 	user = ft_strjoin("\e[34;1m", user);
-	user = ft_strjoin(user, "\e[0m: ❤️ ");
-	user = ft_strjoin(user, "\e[92;7m");
-	user = ft_strjoin(user, "minishell");
-	user = ft_strjoin(user, "\e[0m > ");
+	user = ft_free_strjoin(user, "\e[0m: ❤️ ");
+	user = ft_free_strjoin(user, "\e[92;7m");
+	user = ft_free_strjoin(user, "minishell");
+	user = ft_free_strjoin(user, "\e[0m > ");
 	return (user);
 }
 
@@ -85,7 +85,6 @@ void	print_export(t_env *export)
 t_env	*get_env_export(char **envp)
 {
 	t_env	*block;
-	t_env	*b;
 	int		i;
 	char	**cell;
 
@@ -94,11 +93,10 @@ t_env	*get_env_export(char **envp)
 	while (envp[i])
 	{
 		cell = ft_split_env(envp[i], '=');
-		b = new_cell(cell[0], cell[1], 0);
-		add_cell(&block, b);
+		add_cell(&block, new_cell(cell[0], cell[1], 0));
+		free(cell);
 		i++;
 	}
-	free(cell);
 	return (block);
 }
 
@@ -114,6 +112,7 @@ t_data	*init_data(char **envp)
 	data->env = get_env_export(envp);
 	data->export = get_env_export(envp);
 	data->sp = NULL;
+	data->cmd_lst = NULL;
 	return (data);
 }
 

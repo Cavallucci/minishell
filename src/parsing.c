@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/12 17:10:12 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/13 14:04:13 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,16 +146,16 @@ int	check_pipe_space(char *split_pipe)
 	return (not_space);
 }
 
-int	check_pipe(char **split_pipe)
+int	check_pipe(char **split_pipe, t_sep *sep)
 {
 	int	i;
 
 	i = 0;
 	if (split_pipe[i])
 	{
-		while (split_pipe[i])
+		while (i <= sep->pipe)
 		{
-			if (!check_pipe_space(split_pipe[i]))
+			if (!split_pipe[i] || !check_pipe_space(split_pipe[i]))
 			{
 				ft_putstr("syntax error near unexpected token `|'\n");
 				g_exit_status = 2;
@@ -382,7 +382,7 @@ t_lst	*parsing(t_data *d)
 	if (!check_sep(sep))
 	{
 		split_pipe = ft_split(d->line, '|');
-		if (!split_pipe[i] || check_pipe(split_pipe))
+		if (check_pipe(split_pipe, sep))
 		{
 			cell = init_cell();
 			cell->next = NULL;

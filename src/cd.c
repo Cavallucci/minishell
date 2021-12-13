@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 15:58:26 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/09 12:01:44 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/11 18:57:22 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ int	use_cdpath(t_lst *cmd_lst, char *cdpath)
 	char	*path;
 	int		new;
 
-	path = ft_strjoin(cdpath, cmd_lst->arg[0]);
+	path = ft_strjoin(cdpath, cmd_lst->arg[1]);
 	new = chdir(path);
+	if (new == -1)
+		return (chdir(cmd_lst->arg[1]));
 	ft_putstr_fd(path, 1);
 	ft_putstr_fd("\n", 1);
 	free(path);
@@ -109,6 +111,8 @@ int	exec_cd(t_lst *cmd_lst, t_data *data)
 		{
 			ft_putstr_fd("cd: OLDPWD not set\n", 2);
 			g_exit_status = 1;
+			if (old_pwd)
+				free(old_pwd);
 			return (g_exit_status);
 		}
 	}
@@ -130,8 +134,10 @@ int	exec_cd(t_lst *cmd_lst, t_data *data)
 		ft_putstr_fd(": No such file or directory\n", 2);
 		g_exit_status = 1;
 	}
-	// free(pwd);
-	// free(old_pwd);
+	if (pwd)
+		free(pwd);
+	if (old_pwd)
+		free(old_pwd);
 	return (g_exit_status);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 12:19:41 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/26 16:08:13 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/11 19:01:04 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ char	**get_env_to_char(t_env *env)
 	i = 0;
 	while (tmp)
 	{
-		ch_env[i] = ft_strjoin(ft_strdup(""), tmp->key);
-		ch_env[i] = ft_strjoin(ch_env[i], "=");
-		ch_env[i] = ft_strjoin(ch_env[i], tmp->value);
+		ch_env[i] = ft_strjoin("", tmp->key);
+		ch_env[i] = ft_free_strjoin(ch_env[i], "=");
+		ch_env[i] = ft_free_strjoin(ch_env[i], tmp->value);
 		i++;
 		tmp = tmp->next;
 	}

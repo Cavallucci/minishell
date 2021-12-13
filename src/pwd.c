@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 12:11:52 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/06 14:16:57 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/11 18:54:17 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,14 @@ int	exec_pwd(t_lst *cmd_lst, t_data *data)
 		ft_putstr_fd("pwd: error retrieving current directory: ", 2);
 		ft_putstr_fd("getcwd: cannot access parent directories: ", 2);
 		ft_putstr_fd("No such file or directory", 2);
+		if (pwd)
+			free(pwd);
 		g_exit_status = 1;
 		return (g_exit_status);
 	}
 	ft_putstr_fd(pwd, 1);
 	ft_putchar_fd('\n', 1);
+	if (pwd)
+		free(pwd);
 	return (g_exit_status);
 }
