@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/13 14:04:13 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/13 14:15:31 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,12 @@ int	check_chev(char **split)
 				else if ((split[i][j] == '>' && split[i][j + 1] == '>' && split[i][j + 2] == '>' && split[i][j + 3] == '>') || (split[i][j] == '>' && split[i][j + 1] == '<'))
 				{
 					ft_putstr("syntax error near unexpected token `>>>'\n");
+					g_exit_status = 2;
+					return (g_exit_status);
+				}
+				else if (split[i][j] == '>' && split[i + 1] == NULL)
+				{
+					ft_putstr("syntax error near unexpected token `newline'\n");
 					g_exit_status = 2;
 					return (g_exit_status);
 				}
