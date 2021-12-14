@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:14:29 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/13 16:17:51 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/14 15:20:48 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_data
 	t_lst	*cmd_lst;
 	t_sp	*sp;
 	char	**split;
+	char	**argo;
 	int		exit_value;
 
 }		t_data;
@@ -84,7 +85,10 @@ typedef struct s_sep
 	char	*outfile;
 }t_sep;
 
-void	init_signal(t_data *data);
+void    init_signal(t_data *data);
+void    handle_sig(int signum);
+void    ft_signal_sigint(void);
+void    ft_signal_stdin(void);
 
 /*---------------------lst.c--------------------------*/
 

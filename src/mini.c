@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:50:42 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/13 16:15:57 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/14 16:12:07 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,38 +114,11 @@ t_data	*init_data(char **envp)
 	data->sp = NULL;
 	data->cmd_lst = NULL;
 	data->split = NULL;
+	data->argo = NULL;
 	init_signal(data);
 	return (data);
 }
-/*
-int	main(int argc, char **argv, char **envp)
-{
-	(void)	argv;
-	t_data	*d;
 
-	if (argc != 1)
-		exit(EXIT_FAILURE);
-	d = init_data(envp);
-	if (!d)
-		return(1);
-	d->prompt = design_prompt(d);
-	while (1)
-	{
-		d->line = readline(d->prompt);
-		add_history(d->line);
-		d->cmd_lst = parsing(d);
-		if (d->cmd_lst->cmd)
-		{
-			ft_pipe(d, d->cmd_lst, -1, 1);
-		}
-		if (d->cmd_lst)
-			free_cmd_lst(d, &d->cmd_lst);
-		ft_free_str(d->split);
-	}
-	ft_free_all(d);
-	return (0);
-}
-*/
 int    main(int argc, char **argv, char **envp)
 {
     (void)    argv;
@@ -166,16 +139,26 @@ int    main(int argc, char **argv, char **envp)
     {
         d->line = readline(d->prompt);
         if (!d->line)
-            break;
-        add_history(d->line);
-        d->cmd_lst = parsing(d);
-        if (d->cmd_lst->cmd)
+		{
+			printf("exit\n");
+			break;
+		}
+		if (d->line[0])
         {
-            ft_pipe(d, d->cmd_lst, -1, 1);
-        }
-        if (d->cmd_lst)
-            free_cmd_lst(d, &d->cmd_lst);
-    }
+			add_history(d->line);
+    	    d->cmd_lst = parsing(d);
+    	    if (d->cmd_lst->cmd)
+    	    {
+    	        ft_pipe(d, d->cmd_lst, -1, 1);
+    	    }
+    	    if (d->cmd_lst)
+    	        free_cmd_lst(d, &d->cmd_lst);
+   			if (d->split)
+				ft_free_str(d->split);
+			if (d->argo)
+				ft_free_str(d->argo);
+		}
+   }
     //free(add_history)
     ft_free_all(d);
     return (0);

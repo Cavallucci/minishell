@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/13 16:05:16 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/14 16:12:43 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,6 @@ int	found_cmd(t_data *d, t_lst *cell)
 t_lst	*fill_arg(t_data *d, t_lst *cell)
 {
 	int		place_cmd;
-	char	**arg;
 	int		i;
 	int		tmp;
 
@@ -278,22 +277,22 @@ t_lst	*fill_arg(t_data *d, t_lst *cell)
 	if (place_cmd != -1)
 	{
 		tmp = place_cmd;
-		while (d->split[place_cmd])
+		while (d->split[place_cmd] && d->split[place_cmd][0] != '|')
 			place_cmd++;
-		arg = malloc(sizeof(char*) * (place_cmd + 1));
-		if (!arg)
+		d->argo = malloc(sizeof(char*) * (place_cmd + 1));
+		if (!d->argo)
 			return (NULL);
 		place_cmd = tmp;
 		while (d->split[place_cmd] && d->split[place_cmd][0] != '|')
 		{
 			if (d->split[place_cmd][0] == '<' || d->split[place_cmd][0] == '>')
 				break;
-			arg[i] = d->split[place_cmd];
+			d->argo[i] = d->split[place_cmd];
 			i++;
 			place_cmd++;
 		}
-		arg[i] = NULL;
-		cell = create_new_char(cell, NULL, arg, 'a');
+		d->argo[i] = NULL;
+		cell = create_new_char(cell, NULL, d->argo, 'a');
 		//free arg ??
 	}
 	return (cell);
@@ -417,6 +416,7 @@ t_lst	*parsing(t_data *d)
 			else
 			{
 				cell = init_cell();
+				cell->next = NULL;
 				ft_free_str(split_pipe);
 				add_cell_parsing(d, cell);
 				return (d->cmd_lst);
@@ -432,6 +432,7 @@ t_lst	*parsing(t_data *d)
 	else
 	{
 		cell = init_cell();
+		cell->next = NULL;
 		add_cell_parsing(d, cell);		
 		return (d->cmd_lst);
 	}

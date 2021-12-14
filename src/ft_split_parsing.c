@@ -6,7 +6,7 @@
 /*   By: lcavallu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/10 17:40:05 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/14 13:09:12 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,8 @@ char *make_change(char *s, t_data *d)
 	}
 	else
 		return (NULL);
+	free(bis);
+	free(new);
 	return (d->sp->new[d->sp->j]);
 }
 
