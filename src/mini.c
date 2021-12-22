@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:50:42 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/14 16:12:07 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/21 22:02:56 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ char	*design_prompt(t_data *data)
 
 int	exec_builtin(t_lst *cmd_lst, t_data *data)
 {
+	g_exit_status = 0;
 	if (!ft_strcmp(cmd_lst->cmd, "echo"))
 		return (exec_echo(cmd_lst, data));
 	else if (!ft_strcmp(cmd_lst->cmd, "cd"))
@@ -46,53 +47,24 @@ int	exec_builtin(t_lst *cmd_lst, t_data *data)
 	return (EXIT_FAILURE);
 }
 
-void	print_env(t_env *env)
-{
-	t_env	*tmp;
-
-	tmp = env;
-	while (tmp)
-	{
-		ft_putstr_fd(tmp->key, 1);
-		ft_putchar_fd('=', 1);
-		ft_putstr_fd(tmp->value, 1);
-		ft_putchar_fd('\n', 1);
-		tmp = tmp->next;
-	}
-}
-
-void	print_export(t_env *export)
-{
-	t_env	*tmp;
-
-	tmp = export;
-	while (tmp)
-	{
-		ft_putstr_fd("export ", 1);
-		ft_putstr_fd(tmp->key, 1);
-		if (!tmp->with_value)
-		{
-			ft_putstr_fd("=", 1);
-			ft_putchar_fd('"', 1);
-			ft_putstr_fd(tmp->value, 1);
-			ft_putchar_fd('"', 1);
-		}
-		ft_putstr_fd("\n", 1);
-		tmp = tmp->next;
-	}
-}
-
 t_env	*get_env_export(char **envp)
 {
 	t_env	*block;
 	int		i;
 	char	**cell;
+	int		SHLVL;
 
 	i = 0;
 	block = NULL;
 	while (envp[i])
 	{
 		cell = ft_split_env(envp[i], '=');
+		if (!ft_strcmp(cell[0], "SHLVL"))
+		{
+			SHLVL = ft_atoi(cell[1]) + 1;
+			free(cell[1]);
+			cell[1] = ft_itoa(SHLVL);
+		}
 		add_cell(&block, new_cell(cell[0], cell[1], 0));
 		free(cell);
 		i++;
@@ -116,60 +88,51 @@ t_data	*init_data(char **envp)
 	data->split = NULL;
 	data->argo = NULL;
 	init_signal(data);
+
 	return (data);
 }
 
-int    main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-    (void)    argv;
-    t_data    *d;
+	t_data	*d;
 
-    if (*envp == NULL)
-    {
-        ft_putstr_fd("Basic environment variables are missing\n", 2);
-        exit (1);
-    }
-    if (argc != 1)
-        exit(EXIT_FAILURE);
-    d = init_data(envp);
-    if (!d)
-        return(1);
-    d->prompt = design_prompt(d);
-    while (1)
-    {
-        d->line = readline(d->prompt);
-        if (!d->line)
+	(void) argv;
+	if (*envp == NULL)
+	{
+		ft_putstr_fd("Basic environment variables are missing\n", 2);
+		exit (1);
+	}
+	if (argc != 1)
+		exit(EXIT_FAILURE);
+	d = init_data(envp);
+	if (!d)
+		return (1);
+	d->prompt = design_prompt(d);
+	while (1)
+	{
+		init_signal(d);
+		d->line = readline(d->prompt);
+		if (!d->line)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
 		if (d->line[0])
-        {
+		{
 			add_history(d->line);
-    	    d->cmd_lst = parsing(d);
-    	    if (d->cmd_lst->cmd)
-    	    {
-    	        ft_pipe(d, d->cmd_lst, -1, 1);
-    	    }
-    	    if (d->cmd_lst)
-    	        free_cmd_lst(d, &d->cmd_lst);
-   			if (d->split)
-				ft_free_str(d->split);
-			if (d->argo)
-				ft_free_str(d->argo);
+			d->cmd_lst = parsing(d);
+			if (d->cmd_lst->cmd)
+			{
+				g_exit_status = ft_pipe(d, d->cmd_lst, -1, 1);
+			}
+//			if (d->split)
+//				ft_free_str(d->split);
+			if (d->cmd_lst)
+				free_cmd_lst(d, &d->cmd_lst);
+			if (d->line)
+				free(d->line);
 		}
-   }
-    //free(add_history)
-    ft_free_all(d);
-    return (0);
+	}
+	ft_free_all(d);
+	return (0);
 }
-
-/*
-faire Makefile \/
-recuperer env / a mettre dans la struct en liste chainee
-creer une liste chainee pour le parsing
-check builtin ou pas
-envoyer parsing en double tableau
-pipe fork et compagnie
-cmd a executer
-*/

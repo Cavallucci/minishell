@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 22:54:07 by paulguign         #+#    #+#             */
-/*   Updated: 2021/12/11 16:36:35 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/20 18:59:06 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	error_cmd(char *arg)
 
 static int	ft_pipe_exec(t_data *data, t_lst *lst, int *fd)
 {
-	char **ch_env;
+	char	**ch_env;
 
 	ch_env = NULL;
 	if (error_catch(dup2(fd[0], STDIN_FILENO) < 0, NULL, strerror(errno)))
@@ -48,7 +48,7 @@ static int	ft_pipe_exec(t_data *data, t_lst *lst, int *fd)
 	ch_env = get_env_to_char(data->env);
 	ft_execute(data, 0, lst, ch_env);
 	free_dble_str(ch_env);
-	exit (0);
+	return (g_exit_status);
 }
 
 int	ft_pipe(t_data *data, t_lst *lst, int fd_in, int step)
@@ -58,23 +58,29 @@ int	ft_pipe(t_data *data, t_lst *lst, int fd_in, int step)
 	int	status;
 	int	ret;
 
+	init_signal_cmd(data);
 	status = 0;
-	if (lst && !lst->next && lst->builtin && step == 1 && ft_strcmp(lst->cmd, "echo"))
+	if (lst && !lst->next && lst->builtin
+		&& step == 1 && ft_strcmp(lst->cmd, "echo"))
 	{
+		printf("boghsigs\n");
 		ret = exec_builtin(lst, data);
 		return (ret);
 	}
 	if (error_catch(pipe(fd) < 0, NULL, strerror(errno)))
 	{
-		//Tout free et sortir
+		ft_free_all(data);
 		return (1);
 	}
 	pid = fork();
 	if (error_catch(pid < 0, NULL, strerror(errno)))
+	{
+		ft_free_all(data);
 		exit (1);
-	//exit (ft_free_data(data, 1));
+	}
 	if (pid == 0)
 	{
+		init_signal_child(data);
 		close(fd[0]);
 		if (fd_in == -1 && lst->input == 0)
 			fd[0] = open("/dev/stdin", O_RDONLY);

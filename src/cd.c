@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 15:58:26 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/11 18:57:22 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/20 21:40:03 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,11 @@ void	update_pwd(t_data *data, char *pwd, char *old_pwd)
 	{
 		add_cell(&data->env, new_cell("PWD", pwd, 1));
 		add_cell(&data->export, new_cell("PWD", pwd, 1));
-		printf("PWD added to env\n");
 	}
 	if (!get_key("OLDPWD", data->env))
 	{
 		add_cell(&data->env, new_cell("OLDPWD", old_pwd, 1));
 		add_cell(&data->export, new_cell("OLDPWD", old_pwd, 1));
-		printf("OLDPWD added to env\n");
 	}
 	if (pwd)
 	{
@@ -78,70 +76,21 @@ int	exec_cd(t_lst *cmd_lst, t_data *data)
 	char	*cdpath;
 	int		new;
 
-
 	cdpath = get_key("CDPATH", data->env);
 	old_pwd = ft_getcwd();
-	//obtenir le repertoire de travail courant avant deplacement
 	if (cmd_lst->arg && cmd_lst->arg[1] && cmd_lst->arg[2])
-	{
-		ft_putstr_fd("cd: too many arguments\n", 2);
-		g_exit_status = 1;
-		return (g_exit_status);
-	}
+		return (cd_too_many());
 	else if (!cmd_lst->arg[1] || !ft_strcmp(cmd_lst->arg[1], "--"))
-	{
-		if (get_key("HOME", data->env))
-			new = chdir(get_key("HOME", data->env));
-		else
-		{
-			ft_putstr_fd("cd: HOME not set\n", 2);
-			g_exit_status = 1;
-			return (g_exit_status);
-		}
-	}
+		cd_dble_dash(data, &new);
 	else if (!ft_strcmp(cmd_lst->arg[1], "-"))
-	{
-		if (get_key("OLDPWD", data->env))
-		{
-			ft_putstr_fd(get_key("OLDPWD", data->env), 1);
-			ft_putstr_fd("\n", 1);
-			new = chdir(get_key("OLDPWD", data->env));
-		}
-		else
-		{
-			ft_putstr_fd("cd: OLDPWD not set\n", 2);
-			g_exit_status = 1;
-			if (old_pwd)
-				free(old_pwd);
-			return (g_exit_status);
-		}
-	}
+		cd_simple_dash(data, &new, old_pwd);
 	else
-	{
-		if (cdpath && cmd_lst->arg[1] && ft_strcmp(cmd_lst->arg[1], ".")
-			&& ft_strcmp(cmd_lst->arg[1], ".."))
-			new = use_cdpath(cmd_lst, cdpath);
-		else
-			new = chdir(cmd_lst->arg[1]);
-	}
-	pwd = ft_getcwd(); //obtenir le repertoire courant
+		cd(cmd_lst, &new, cdpath);
+	pwd = ft_getcwd();
 	if (new == 0)
 		update_pwd(data, pwd, old_pwd);
-	if (new == -1)
-	{
-		ft_putstr_fd("bash: cd: ", 2);
-		ft_putstr_fd(cmd_lst->arg[1], 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-		g_exit_status = 1;
-	}
-	if (pwd)
-		free(pwd);
-	if (old_pwd)
-		free(old_pwd);
+	cd_no_file(cmd_lst, new);
+	free_str(&pwd);
+	free_str(&old_pwd);
 	return (g_exit_status);
 }
-
-//chdir = changer le repertoire courant,
-//remplace le répertoire de travail courant par celui
-//indiqué dans le chemin path en arg de chdir.
-//mettre le pwd avant chgmt dans le oldpwd

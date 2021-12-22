@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 15:46:27 by mkralik           #+#    #+#             */
-/*   Updated: 2021/11/23 13:08:02 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/14 18:36:45 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_env	*get_prev(char *key, t_env *env)
 	return (NULL);
 }
 
-void	unset(t_lst *cmd_lst, t_env *env) // dans env BIB suivi de BOB et BUB, on veut liberer BOB
+void	unset(t_lst *cmd_lst, t_env *env)
 {
 	int		i;
 	t_env	*prev;
@@ -37,7 +37,7 @@ void	unset(t_lst *cmd_lst, t_env *env) // dans env BIB suivi de BOB et BUB, on v
 	{
 		if (!get_key(cmd_lst->arg[i], env))
 			return ;
-		prev = get_prev(cmd_lst->arg[i], env); //get_prev rapporte BIB
+		prev = get_prev(cmd_lst->arg[i], env);
 		if (!prev)
 		{
 			tmp = env;
@@ -45,9 +45,9 @@ void	unset(t_lst *cmd_lst, t_env *env) // dans env BIB suivi de BOB et BUB, on v
 			env = tmp->next;
 			return ;
 		}
-		tmp = prev->next->next; //prochain prochain de BIB est BUB
-		free(prev->next); //on libere BOB
-		prev->next = tmp; //BIB pointe sur BUB
+		tmp = prev->next->next;
+		free(prev->next);
+		prev->next = tmp;
 	}
 }
 

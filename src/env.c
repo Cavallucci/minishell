@@ -6,11 +6,40 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 12:19:41 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/11 19:01:04 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/14 20:15:47 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	**ft_split_env(const char *s, char c)
+{
+	char	**tab;
+	int		index;
+	int		i;
+
+	if (!s)
+		return (NULL);
+	tab = ft_calloc(sizeof(char *), 3);
+	if (!tab)
+		return (NULL);
+	index = 0;
+	tab[index] = ft_calloc(sizeof(char), (sizeof_word(s, c) + 1));
+	if (!tab[index])
+		return (free_tab(tab, index));
+	i = 0;
+	while (*s && (*s != c))
+		tab[index][i++] = *s++;
+	index++;
+	tab[index] = ft_calloc(sizeof(char), (ft_strlen(s) + 1));
+	if (!tab[index])
+		return (free_tab(tab, index));
+	i = 0;
+	while (*(++s))
+		tab[index][i++] = *s;
+	index++;
+	return (tab);
+}
 
 int	size_env(t_env *env)
 {

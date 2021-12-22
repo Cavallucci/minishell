@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 14:38:51 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/13 17:26:57 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/21 22:20:08 by lcavallu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,12 @@ void	remove_from_list(t_lst *cmd_lst, t_data *data)
 	if (!cmd_lst)
 		return ;
 	// free_str(&cmd_lst->cmd);
-//	 if (cmd_lst->arg)
-		//free_dble_str(cmd_lst->arg);
-	// free_str(&cmd_lst->path);
+	if (cmd_lst->cmd)
+		free(cmd_lst->cmd);
+	if (cmd_lst->arg)
+		ft_free_str(cmd_lst->arg);
+	if (cmd_lst->path)
+		free(cmd_lst->path);
 	free(cmd_lst);
 	cmd_lst = NULL;
 }
@@ -81,8 +84,10 @@ void	free_env(t_env *env)
 	while (tmp)
 	{
 		env = env->next;
-		free(tmp->key);
-		free(tmp->value);
+		if (tmp->key)
+			free(tmp->key);
+		if (tmp->value)
+			free(tmp->value);
 		free(tmp);
 		tmp = NULL;
 		tmp = env;
@@ -98,11 +103,12 @@ void	ft_free_all(t_data *data)
 	if (data->cmd_lst)
 		free_cmd_lst(data, &data->cmd_lst);
 	// if (data->cmd_lst->path)
-	// 	free_str(data->cmd_lst->path);
+	// 	free(data->cmd_lst->path);
 	// free(data->cmd_lst->arg);
 	if (data->prompt)
 		free_str(&data->prompt);
-	// free_str(data->line);
+	if (data->line)
+		free(data->line);
 	if (data->env)
 		free_env(data->env);
 	if (data->export)

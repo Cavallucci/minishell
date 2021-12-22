@@ -14,20 +14,36 @@ SOURCES =	mini.c \
 			parsing.c \
 			parsing_utils.c \
 			ft_split_parsing.c \
+			ft_split_parsing_pipe.c \
+			parsing_var_env.c \
+			parsing_charset.c \
+			parsing_count.c \
+			parsing_utils_create.c \
+			parsing_utils_str.c \
+			parsing_check.c \
+			parsing_fill.c \
+			parsing_found.c \
+			parsing_file.c \
 			ft_split.c \
+			ft_strjoin.c \
 			lst.c \
 			utils.c \
+			ft_str.c \
 			export.c \
 			env.c \
 			pwd.c \
+			print.c \
 			echo.c \
 			cd.c \
+			cd_handle.c \
 			unset.c \
 			exit.c \
 			pipex.c \
 			error.c \
 			exec.c \
 			signal.c \
+			signal_handle.c \
+			heredoc.c \
 			free.c
 
 SRC	= $(addprefix $(SRC_PATH)/,$(SOURCES))
