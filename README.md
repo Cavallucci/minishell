@@ -1,100 +1,70 @@
-<!DOCTYPE html>
-<html>
+# Minishell
 
-<head>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
+Welcome to the Minishell project! This project aims to create a minimalistic shell in C language, providing a basic command interpreter. This shell allows you to execute system commands, manage processes, and includes some additional features.
 
-        h1 {
-            color: #333;
-            border-bottom: 1px solid #ccc;
-        }
+## Key Features
 
-        h2 {
-            color: #555;
-        }
+- System command interpretation: Minishell allows you to execute commands built into the operating system, such as `ls`, `cd`, `mkdir`, `cat`, etc.
+- Process management: You can run commands in the background or foreground, as well as handle signals and child processes.
+- Environment variables: Minishell enables management of environment variables like `PATH` and accessing their values.
+- Redirections: You can use redirection operators to redirect standard input/output of commands to files.
+- Pipes: Minishell supports command chaining using pipes (`|`), allowing you to redirect the output of one command to the input of another.
 
-        pre {
-            background-color: #f5f5f5;
-            padding: 10px;
-            border-radius: 5px;
-        }
+## Requirements
 
-        code {
-            font-family: Consolas, monospace;
-        }
-    </style>
-</head>
+- Operating System: Linux, macOS, or Windows (with WSL emulator)
+- Compiler: GCC (GNU Compiler Collection)
 
-<body>
-    <h1>Minishell</h1>
+## Installation
 
-    <p>Bienvenue dans le projet Minishell ! Ce projet consiste à créer un shell minimaliste en langage C, offrant un interpréteur de commandes basique. Ce shell vous permettra d'exécuter des commandes système, de gérer des processus, ainsi que quelques fonctionnalités supplémentaires.</p>
+1. Clone this GitHub repository to your local machine:
 
-    <h2>Fonctionnalités principales</h2>
-    <ul>
-        <li>Interprétation des commandes système</li>
-        <li>Gestion des processus</li>
-        <li>Variables d'environnement</li>
-        <li>Redirections</li>
-        <li>Pipes</li>
-    </ul>
+    git clone https://github.com/Cavallucci/Minishell.git
 
-    <h2>Configuration requise</h2>
-    <ul>
-        <li>Système d'exploitation : Linux, macOS ou Windows (avec l'émulateur WSL)</li>
-        <li>Compilateur : GCC (GNU Compiler Collection)</li>
-    </ul>
+2. Navigate to the project directory:
 
-    <h2>Installation</h2>
-    <ol>
-        <li>Clonez ce dépôt GitHub sur votre machine locale :</li>
-    </ol>
+    cd Minishell
 
-    <pre><code>git clone https://github.com/Cavallucci/Minishell.git</code></pre>
+3. Compile the project using the Makefile:
 
-    <ol start="2">
-        <li>Accédez au répertoire du projet :</li>
-    </ol>
+    Make
 
-    <pre><code>cd Minishell</code></pre>
+4. Run the generated executable file:
 
-    <ol start="3">
-        <li>Compilez le projet à l'aide du Makefile :</li>
-    </ol>
+    ./minishell
 
-    <pre><code>make</code></pre>
+## Usage
 
-    <ol start="4">
-        <li>Exécutez le fichier exécutable généré :</li>
-    </ol>
+Once you have executed the `minishell` file, you can start using the shell by entering commands. Here are some examples of commands you can try:
 
-    <pre><code>./minishell</code></pre>
+- Execute a system command:
 
-    <h2>Utilisation</h2>
-    <p>Une fois que vous avez exécuté le fichier <code>minishell</code>, vous pouvez commencer à utiliser le shell en entrant des commandes. Voici quelques exemples de commandes que vous pouvez essayer :</p>
+    $ ls
+    $ cat file.txt
+    $ mkdir new_directory
 
-    <pre><code>$ ls<br>$ cat fichier.txt<br>$ mkdir nouveau_dossier</code></pre>
+- Change directory:
 
-    <pre><code>$ cd chemin/vers/répertoire</code></pre>
+    $ cd path/to/directory
 
-    <pre><code>$ echo $PATH</code></pre>
+- Use environment variables:
 
-    <pre><code>$ ls > fichiers.txt<br>$ cat &lt; fichier.txt</code></pre>
+    $ echo $PATH
 
-    <pre><code>$ ls | grep "motif"</code></pre>
+- Use redirections:
 
-    <p>Pour obtenir plus d'informations sur les fonctionnalités et les commandes prises en charge par Minishell, vous pouvez consulter la documentation intégrée ou les fichiers source du projet.</p>
+    $ ls > files.txt
+    $ cat < file.txt
 
-<h2>Auteurs</h2>
-<ul>
-    <li>Kralik Marion</li>
-    <li>Cavallucci Laura</li>
-</ul>
+- Use pipes:
 
-</body>
+    $ ls | grep "pattern"
 
-</html>
+
+For more information on the features and supported commands of Minishell, you can refer to the built-in documentation or the project's source files.
+
+
+## Authors
+
+- Marion Kralik
+- Laura Cavallucci
