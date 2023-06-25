@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/22 21:25:09 by lcavallu         ###   ########.fr       */
+/*   Updated: 2022/01/05 18:42:47 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_lst	*ft_free_double(char **path, char *cmd, t_lst *cell)
 {
 	if (!cmd)
 	{
- 		if (access(cell->cmd, F_OK) != -1)
+		if (access(cell->cmd, F_OK) != -1)
 			cell = create_new_char(cell, cell->cmd, NULL, 'p');
 		else
 			cell = create_new_char(cell, NULL, NULL, 'p');
@@ -33,6 +33,9 @@ t_lst	*ft_return(t_data *d, char **split_pipe, int i)
 {
 	t_lst	*cell;
 
+	if (d->split)
+		ft_free_str(d->split);
+	d->split = NULL;
 	cell = init_cell();
 	cell->next = NULL;
 	free(d->sp);
@@ -43,36 +46,35 @@ t_lst	*ft_return(t_data *d, char **split_pipe, int i)
 	return (d->cmd_lst);
 }
 
-void	ft_fill_cell(t_data *d, t_sep *sep)
+void	ft_fill_cell(t_data *d, t_sep *sep, char **split_quote)
 {
 	t_lst	*cell;
-	
+
 	cell = init_cell();
-	cell = check_infile_outfile(d, sep, cell);
-	cell = fill_in_out_file(d, sep, cell);
+	cell = check_infile_outfile(d, sep, cell, split_quote);
+	cell = fill_in_out_file(d, cell, split_quote);
 	cell = fill_builtin(cell);
-	if (cell->builtin == 0)
+	if (cell->builtin == 0 && cell->cmd[0])
 		cell = found_path(cell, d);
 	cell = fill_arg(d, cell);
 	cell->next = NULL;
 	add_cell_parsing(d, cell);
-//	print_sep(sep, d);
 }
 
 int	ft_fill_split(t_data *d, t_sep *sep, char **split_pipe, int *i)
 {
-	int	j;
+	int		j;
+	char	**split_quote;
 
 	j = *i;
 	d->split = ft_split_parsing(split_pipe[j], d);
-//	if (!check_chev(d))
-	ft_fill_cell(d, sep);
-//	else
-//	{
-//		ft_free_str(d->split);
-//		return (1);
-//	}
+	if (check_chev(d, split_pipe) != 0)
+		return (1);
+	split_quote = ft_split_parsing_quote(split_pipe[j], d);
+	ft_fill_cell(d, sep, split_quote);
 	(*i)++;
+	ft_free_str(split_quote);
+	split_quote = NULL;
 	ft_free_str(d->split);
 	d->split = NULL;
 	free(d->sp);
@@ -93,14 +95,13 @@ t_lst	*parsing(t_data *d)
 	if (!check_sep(sep, d))
 	{
 		split_pipe = ft_split_parsing_pipe(d->line, '|', d);
-		if (check_pipe(split_pipe, sep) && check_chev(d, split_pipe))
+		if (check_pipe(split_pipe, sep) != 0)
 			return (ft_return(d, split_pipe, 1));
 		while (split_pipe[i])
 			if (ft_fill_split(d, sep, split_pipe, &i))
 				return (ft_return(d, split_pipe, 2));
 		ft_free_str(split_pipe);
 		split_pipe = NULL;
-		print_list(d->cmd_lst);
 	}
 	else
 		return (ft_return(d, NULL, 3));

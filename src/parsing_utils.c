@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:07:05 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/22 21:20:28 by lcavallu         ###   ########.fr       */
+/*   Updated: 2021/12/30 19:05:46 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,39 +66,6 @@ void	ft_swap(char **a, char **b)
 	*b = tmp;
 }
 
-void	print_list(t_lst *list)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (list)
-	{
-		printf("-----------------------------------\n");
-		printf("| pipe = %d                        \n", i);
-		printf("| cmd = %s            \n", list->cmd);
-		if (list->arg)
-		{
-			printf("| arg = ");
-			j = 0;
-			while (list->arg[j])
-			{
-				printf("%s--", list->arg[j]);
-				j++;
-			}
-		}
-		printf("\n");
-		printf("| path = %s			  \n", list->path);
-		printf("| input = %i		  \n", list->input);
-		printf("| output = %i		  \n", list->output);
-		printf("| builtin = %i			\n", list->builtin);
-		printf("-----------------------------------\n");
-		list = list->next;
-		i++;
-	}
-}
-
 int	found_place_raft(char **split, int i, t_data *d)
 {
 	int	j;
@@ -111,7 +78,8 @@ int	found_place_raft(char **split, int i, t_data *d)
 		while (split[i][j])
 		{
 			check_quote(split[i][j], d);
-			if ((split[i][j] == '<' || split[i][j] == '>') && d->sp->d_quote == 0 && d->sp->s_quote == 0)
+			if ((split[i][j] == '<' || split[i][j] == '>')
+				&& d->sp->d_quote == 0 && d->sp->s_quote == 0)
 				return (i);
 			j++;
 		}

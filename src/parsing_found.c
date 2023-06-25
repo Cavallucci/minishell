@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/21 22:56:20 by lcavallu         ###   ########.fr       */
+/*   Updated: 2022/01/05 18:45:23 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,15 @@ t_lst	*found_path(t_lst *cell, t_data *d)
 		tmp = tmp->next;
 	if (tmp)
 		path = ft_split(tmp->value, ':');
-	//if (!path)
-	//	return (NULL);
-	i = 0;
+	i = -1;
 	if (check_if_path(cell->cmd))
 		return (ft_free_double(path, NULL, cell));
-	while (path && path[i])
+	while (path && path[++i])
 	{
 		cmd = found_path_data(path, i, cmd, cell);
 		if (access(cmd, F_OK) != -1)
 			return (ft_free_double(path, cmd, cell));
 		free(cmd);
-		i++;
 	}
 	if (path)
 		ft_free_str(path);
@@ -68,18 +65,13 @@ t_lst	*found_path(t_lst *cell, t_data *d)
 	return (cell);
 }
 
-void	print_sep(t_sep *sep, t_data *d)
-{
-	printf("| = %i\n&& = %i\n' = %i\n\" = %i\n< = %i\n> = %i\n<< = %i\n>> = %i\ninfile = %s\noutfile = %s\n", sep->pipe, sep->double_and, sep->simple_quo, sep->double_quo, sep->simple_raft_left, sep->simple_raft_right, sep->double_raft_left, sep->double_raft_right, sep->infile, sep->outfile);
-	for(int q=0; d->split[q]; q++)
-		printf("d->split[%i] = %s\n", q, d->split[q]);
-}
-
 int	check_if_path(char *argv)
 {
 	int	i;
 
 	i = 0;
+	if (!argv)
+		return (0);
 	while (argv[i])
 	{
 		if (argv[i] == '/')

@@ -6,82 +6,54 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/22 21:23:04 by lcavallu         ###   ########.fr       */
+/*   Updated: 2022/01/05 18:49:36 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	ft_check_close(t_lst *cell)
+{
+	if (cell->input)
+		close(cell->input);
+	if (cell->output)
+		close(cell->output);
+}
+
 void	check_in_out_data(t_data *d, t_sep *sep, t_lst *cell, int place_raft)
 {
+	(void)sep;
 	if (d->split[place_raft][0] == '<')
 	{
-		sep->infile = d->split[place_raft + 1];
+		if (cell->cmd)
+			free(cell->cmd);
 		if (place_raft != 0)
-		{
-			while (d->split[place_raft - 1][0] == '-')
-				place_raft -= 1;
-			cell = create_new_char(cell, d->split[place_raft - 1], NULL, 'c');
-		}
+			cell = create_new_char(cell, d->split[0], NULL, 'c');
 		else
-		{
 			cell = create_new_char(cell, d->split[place_raft + 2], NULL, 'c');
-			ft_swap(&d->split[place_raft + 1], &d->split[place_raft + 2]);
-		}
 	}
 	else if (d->split[place_raft][0] == '>')
 	{
-		sep->outfile = d->split[place_raft + 1];
 		if (!cell->cmd)
 			cell = create_new_char(cell, d->split[0], NULL, 'c');
 	}
 }
 
-t_lst	*check_infile_outfile(t_data *d, t_sep *sep, t_lst *cell)
+t_lst	*check_infile_outfile(t_data *d, t_sep *sep, t_lst *cell, char **s_q)
 {
 	int	place_raft;
 
-	place_raft = found_place_raft(d->split, 0, d);
+	place_raft = found_place_raft(s_q, 0, d);
 	if (place_raft != -1)
 	{
 		while (place_raft != -1)
 		{
 			check_in_out_data(d, sep, cell, place_raft);
-			place_raft = found_place_raft(d->split, place_raft + 1, d);
+			place_raft = found_place_raft(s_q, place_raft + 1, d);
 		}
 	}
 	else
 		cell = create_new_char(cell, d->split[0], NULL, 'c');
-	return (cell);
-}
-
-void	init_sep(t_sep *sep)
-{
-	sep->pipe = 0;
-	sep->double_and = 0;
-	sep->simple_quo = 0;
-	sep->double_quo = 0;
-	sep->simple_raft_left = 0;
-	sep->simple_raft_right = 0;
-	sep->double_raft_left = 0;
-	sep->double_raft_right = 0;
-	sep->infile = NULL;
-	sep->outfile = NULL;
-}
-
-t_lst	*init_cell(void)
-{
-	t_lst	*cell;
-
-	cell = malloc(sizeof(t_lst));
-	if (!cell)
-		return (NULL);
-	cell->cmd = NULL;
-	cell->arg = NULL;
-	cell->path = NULL;
-	cell->input = 0;
-	cell->output = 0;
-	cell->builtin = 0;
 	return (cell);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 18:41:15 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/21 15:52:29 by lcavallu         ###   ########.fr       */
+/*   Updated: 2022/01/05 17:15:28 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ char	*fill_memory(char *s, t_data *d, int i, t_env *tmp)
 	char	*nb_exit;
 
 	nb_exit = ft_itoa(g_exit_status);
-	printf("nb = %i, nb exit = %s\n", g_exit_status, nb_exit);
 	if (d->sp->remember_mem == 0 && s[d->sp->line] != '?')
 		d->sp->new[d->sp->j] = (char *)malloc((sizeof(char)
 					* (d->sp->count_c - i) + ft_strlen(tmp->value) + 1));
@@ -30,7 +29,7 @@ char	*fill_memory(char *s, t_data *d, int i, t_env *tmp)
 	else if (d->sp->remember_mem != 0 && s[d->sp->line] == '?')
 		d->sp->new[d->sp->j] = (char *)malloc(sizeof(char)
 				* (d->sp->remember_mem + ft_strlen(nb_exit) + 1));
-	if (s[d->sp->line] == '?')
+	if (s[d->sp->line] == '?' && s[d->sp->line + 1] == 0)
 		d->sp->remember_mem += ft_strlen(nb_exit);
 	else
 		d->sp->remember_mem += ft_strlen(tmp->value);
@@ -126,7 +125,10 @@ char	*make_change(char *s, t_data *d)
 	if (cmp_str(tmp->key, new) || s[d->sp->line] == '?')
 		execute_var_env(s, d, i, tmp);
 	else
+	{
+		free(new);
 		return (NULL);
+	}
 	free(new);
 	return (d->sp->new[d->sp->j]);
 }

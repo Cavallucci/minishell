@@ -6,25 +6,11 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 19:20:28 by lcavallu          #+#    #+#             */
-/*   Updated: 2021/12/22 21:22:12 by lcavallu         ###   ########.fr       */
+/*   Updated: 2022/01/05 18:49:44 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	fill_sep_init(t_data *d, t_sep *sep, int i)
-{
-	if (d->line[i] == '<' && d->line[i + 1] != '<')
-		sep->simple_raft_left++;
-	if (d->line[i] == '>' && d->line[i + 1] != '>')
-		sep->simple_raft_right++;
-	if (d->line[i] == '<' && d->line[i + 1] == '<')
-		sep->double_raft_left++;
-	if (d->line[i] == '>' && d->line[i + 1] == '>')
-		sep->double_raft_right++;
-	if (d->line[i] == '&' && d->line[i + 1] == '&')
-		sep->double_and++;
-}
 
 void	fill_sep(t_data *d, t_sep *sep)
 {
@@ -37,54 +23,73 @@ void	fill_sep(t_data *d, t_sep *sep)
 	d_quote = 0;
 	while (d->line[i])
 	{
-		if (d->line[i] == '\'' && d_quote == 0)
-		{
-			s_quote = 1;
-			sep->simple_quo++;
-		}
-		if (d->line[i] == '"' && s_quote == 0)
-		{
-			d_quote = 1;
-			sep->double_quo++;
-		}
-		if (d->line[i] == '|' && d_quote == 0 && s_quote == 0)
+		if (d->line[i] == '"' && d_quote == 1)
+			d_quote = fill_sep_quote(s_quote, d_quote, sep, 1);
+		else if (d->line[i] == '\'' && s_quote == 1)
+			s_quote = fill_sep_quote(s_quote, d_quote, sep, 2);
+		else if (d->line[i] == '\'' && d_quote == 0)
+			s_quote = fill_sep_quote(s_quote, d_quote, sep, 3);
+		else if (d->line[i] == '"' && s_quote == 0)
+			d_quote = fill_sep_quote(s_quote, d_quote, sep, 4);
+		else if (d->line[i] == '|' && d_quote == 0 && s_quote == 0)
 			sep->pipe++;
 		fill_sep_init(d, sep, i);
 		i++;
 	}
+	d->nb_pipe = sep->pipe;
 }
 
-t_lst	*fill_in_out_file(t_data *d, t_sep *sep, t_lst *cell)
+int	fill_in_out_file_heredoc(int *fd, t_data *d, t_lst *cell, int p_r)
+{
+	if (!cell->cmd)
+	{
+		fd[0] = heredoc(d, d->split[p_r + 1]);
+		cell->cmd = ft_strdup("test");
+		cell->arg = malloc(sizeof(char *) * 2);
+		cell->arg[0] = ft_strdup("test");
+		cell->arg[1] = NULL;
+		cell->path = NULL;
+		cell->input = 3;
+		cell->output = 0;
+		cell->builtin = 0;
+	}
+	else
+		fd[0] = heredoc(d, d->split[p_r + 1]);
+	cell->input = fd[0];
+	return (fd[0]);
+}
+
+t_lst	*fill_in_out_file(t_data *d, t_lst *cell, char **split_quote)
 {
 	int	p_r;
 	int	fd[0];
 
-	p_r = found_place_raft(d->split, 0, d);
+	p_r = found_place_raft(split_quote, 0, d);
+	ft_check_close(cell);
 	while (p_r != -1)
 	{
 		if (d->split[p_r][0] == '<' && d->split[p_r][1] != '<')
-			cell = create_new_int(cell, 'i', open(sep->infile, O_RDONLY));
+			cell = create_new_int(cell, 'i', open(d->split[p_r + 1], O_RDONLY));
 		else if (d->split[p_r][0] == '>' && d->split[p_r][1] != '>')
-			cell = create_new_int(cell, 'o', open(sep->outfile, O_CREAT
+			cell = create_new_int(cell, 'o', open(d->split[p_r + 1], O_CREAT
 						| O_WRONLY | O_TRUNC, 0644));
 		else if (d->split[p_r][0] == '>' && d->split[p_r][1] == '>')
-			cell = create_new_int(cell, 'i', open(sep->infile, O_CREAT
+			cell = create_new_int(cell, 'o', open(d->split[p_r + 1], O_CREAT
 						| O_WRONLY | O_APPEND, 0644));
 		else if (d->split[p_r][0] == '<' && d->split[p_r][1] == '<')
 		{
 			if (cell->input > 0)
 				close(cell->input);
-			fd[0] = heredoc(d, d->split[p_r + 1]);
-			cell->input = fd[0];
+			fd[0] = fill_in_out_file_heredoc(fd, d, cell, p_r);
 		}
-		p_r = found_place_raft(d->split, p_r + 1, d);
+		p_r = found_place_raft(split_quote, p_r + 1, d);
 	}
 	return (cell);
 }
 
 int	fill_arg_data(t_data *d, int place_cmd)
 {
-	while (d->split[place_cmd] && (d->split[place_cmd][0] != '|' || (d->split[place_cmd][0] == '|' && (d->sp->d_quote == 1 || d->sp->s_quote == 1))))
+	while (d->split[place_cmd] && d->split[place_cmd][0] != '|')
 		place_cmd++;
 	return (place_cmd);
 }

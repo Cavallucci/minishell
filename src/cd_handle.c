@@ -6,7 +6,7 @@
 /*   By: mkralik <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 19:48:09 by mkralik           #+#    #+#             */
-/*   Updated: 2021/12/20 19:07:05 by mkralik          ###   ########.fr       */
+/*   Updated: 2021/12/30 17:21:38 by mkralik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	cd_dble_dash(t_data *data, int *new)
 
 int	cd_simple_dash(t_data *data, int *new, char *old_pwd)
 {
+	(void)old_pwd;
 	if (get_key("OLDPWD", data->env))
 	{
 		ft_putstr_fd(get_key("OLDPWD", data->env), 1);
@@ -37,8 +38,6 @@ int	cd_simple_dash(t_data *data, int *new, char *old_pwd)
 	{
 		ft_putstr_fd("cd: OLDPWD not set\n", 2);
 		g_exit_status = 1;
-		if (old_pwd)
-			free(old_pwd);
 		return (g_exit_status);
 	}
 	return (0);
@@ -65,9 +64,10 @@ void	cd_no_file(t_lst *cmd_lst, int new)
 	}
 }
 
-int	cd_too_many(void)
+int	cd_too_many(char *old_pwd)
 {
 	ft_putstr_fd("cd: too many arguments\n", 2);
 	g_exit_status = 1;
+	free_str(&old_pwd);
 	return (g_exit_status);
 }

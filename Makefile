@@ -2,7 +2,7 @@ NAME	= minishell
 
 CC		= gcc
 
-FLAGS	= -Wall -Wextra -Werror -g
+FLAGS	= -Wall -Wextra -Werror -g #-fsanitize=address
 
 INCLUDE	= include
 
@@ -15,6 +15,8 @@ SOURCES =	mini.c \
 			parsing_utils.c \
 			ft_split_parsing.c \
 			ft_split_parsing_pipe.c \
+			ft_split_parsing_quote.c \
+			ft_split_parsing_quote_bis.c \
 			parsing_var_env.c \
 			parsing_charset.c \
 			parsing_count.c \
@@ -24,6 +26,7 @@ SOURCES =	mini.c \
 			parsing_fill.c \
 			parsing_found.c \
 			parsing_file.c \
+			parsing_init.c \
 			ft_split.c \
 			ft_strjoin.c \
 			lst.c \
